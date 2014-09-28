@@ -3,29 +3,44 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
 	xmlns:cloud="http://www.springframework.org/schema/cloud"
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
 	xsi:schemaLocation="http://www.springframework.org/schema/cloud http://www.springframework.org/schema/cloud/spring-cloud-0.1.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
-		http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.5.xsd">
- 
-    <context:component-scan base-package="hu.evosoft" />
- 
-	<cloud:mongo-db-factory id="mongoDbFactory"/>
-	
-    <!-- MongoTemplate for connecting and querying the documents in the database -->
-    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
-        <constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
-    </bean>
- 
-    <!-- Use this post processor to translate any MongoExceptions thrown in @Repository annotated classes -->
-    <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
-     
-         
-    <bean id="jspViewResolver"
-          class="org.springframework.web.servlet.view.InternalResourceViewResolver"
-          p:prefix="/WEB-INF/jsp/"
-          p:suffix=".jsp" /> 
- 
+		http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.3.xsd">
+
+	<context:component-scan base-package="hu.evosoft" />
+
+	<!-- RabitMq -->
+	<cloud:rabbit-connection-factory id="rabitConnectionFactory" />
+    <!-- Set up the AmqpTemplate/RabbitTemplate: -->
+    <rabbit:template id="rabbitTemplate" connection-factory="rabitConnectionFactory"/>
+    <!-- Request that queues, exchanges and bindings be automatically
+         declared on the broker: -->
+    <rabbit:admin connection-factory="rabitConnectionFactory"/>
+    <!-- Declare the "messages" queue: -->
+    <rabbit:queue name="sazecis" durable="true"/>
+    
+	<!-- MongoTemplate -->
+	<cloud:mongo-db-factory id="mongoDbFactory" />
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
+	</bean>
+
+	<!-- RedisTemplate -->
+	<cloud:redis-connection-factory id="redisConnectionFactory" />
+	<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate"
+		p:connection-factory-ref="redisConnectionFactory" />
+
+	<!-- Use this post processor to translate any MongoExceptions thrown in 
+		@Repository annotated classes -->
+	<bean
+		class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+
+
+	<bean id="jspViewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+		p:prefix="/WEB-INF/jsp/" p:suffix=".jsp" />
+
 </beans>

@@ -9,7 +9,14 @@ public class Person {
     @Id
     private String id;
     private String name;
-     
+
+    public Person() {
+    }
+
+    public Person(String name) {
+    	this.name = name;
+    }
+    
     public String getId() {
         return id;
     }

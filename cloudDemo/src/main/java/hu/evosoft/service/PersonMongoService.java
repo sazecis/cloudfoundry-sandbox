@@ -1,20 +1,18 @@
 package hu.evosoft.service;
 
+import hu.evosoft.model.Person;
+
 import java.util.List;
 import java.util.UUID;
- 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Repository;
  
-
-import hu.evosoft.model.Person;
- 
 @Repository
-public class PersonService {
+public class PersonMongoService {
      
-    @Autowired
+    @Autowired 
     private MongoTemplate mongoTemplate;
      
     public static final String COLLECTION_NAME = "person";
