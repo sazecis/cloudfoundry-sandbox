@@ -1,6 +1,6 @@
 package hu.evosoft.transfer;
 
-import hu.evosoft.service.PersonRabbitService;
+import hu.evosoft.service.CloudRabbitService;
 import hu.evosoft.service.PersonRedisService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +11,8 @@ import org.springframework.stereotype.Repository;
 public class RabbitRedisTransferrer {
 
 	@Autowired
-	@Qualifier("personRabbitService")
-	private PersonRabbitService rabbitService;
+	@Qualifier("cloudRabbitService")
+	private CloudRabbitService rabbitService;
 	@Autowired
 	@Qualifier("personRedisService")
 	private PersonRedisService redisService;

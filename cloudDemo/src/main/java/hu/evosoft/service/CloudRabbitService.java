@@ -7,14 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class PersonRabbitService {
+public class CloudRabbitService {
 
 	private static final String QUEUE_NAME = "sazecis"; 
 	
     @Autowired 
     private RabbitTemplate rabbitTemplate;
        
-    public void queuePerson(String name) {
+    public void queueMessage(String name) {
     	rabbitTemplate.setQueue(QUEUE_NAME);
         rabbitTemplate.convertAndSend(QUEUE_NAME, name);
     }

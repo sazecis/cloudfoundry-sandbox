@@ -1,7 +1,7 @@
 package hu.evosoft.controller;
 
 import hu.evosoft.model.Person;
-import hu.evosoft.service.PersonRabbitService;
+import hu.evosoft.service.CloudRabbitService;
 import hu.evosoft.transfer.RabbitRedisTransferrer;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +20,8 @@ public class PersonRabbitController {
 	private static Person myPerson = null;
 	
 	@Autowired
-	@Qualifier("personRabbitService")
-	private PersonRabbitService rabbitService;
+	@Qualifier("cloudRabbitService")
+	private CloudRabbitService rabbitService;
 
 	@Autowired
 	private RabbitRedisTransferrer rabbitRedisTransferrer;
@@ -37,7 +37,7 @@ public class PersonRabbitController {
 	@RequestMapping(value = "/rabbit/queue", method = RequestMethod.POST)
 	public View queuePerson(@ModelAttribute Person person, ModelMap model) {
 		myPerson = person;
-		rabbitService.queuePerson(person.getName());
+		rabbitService.queueMessage(person.getName());
 		return new RedirectView("/rabbit");
 	}
 
