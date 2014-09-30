@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:cloud="http://www.springframework.org/schema/cloud"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:cloud="http://www.springframework.org/schema/cloud"
 	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
 	xsi:schemaLocation="http://www.springframework.org/schema/cloud http://www.springframework.org/schema/cloud/spring-cloud-0.1.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
@@ -12,16 +10,24 @@
 
 	<context:component-scan base-package="hu.evosoft" />
 
+	<bean id="logFile" class="hu.evosoft.model.LogFile" />
+
 	<!-- RabitMq -->
 	<cloud:rabbit-connection-factory id="rabitConnectionFactory" />
-    <!-- Set up the AmqpTemplate/RabbitTemplate: -->
-    <rabbit:template id="rabbitTemplate" connection-factory="rabitConnectionFactory"/>
-    <!-- Request that queues, exchanges and bindings be automatically
-         declared on the broker: -->
-    <rabbit:admin connection-factory="rabitConnectionFactory"/>
-    <!-- Declare the "messages" queue: -->
-    <rabbit:queue name="cloudDemo" durable="true"/>
-    
+	<!-- Set up the AmqpTemplate/RabbitTemplate: -->
+	<rabbit:template id="rabbitTemplate"
+		connection-factory="rabitConnectionFactory" />
+	<!-- Request that queues, exchanges and bindings be automatically declared 
+		on the broker: -->
+	<rabbit:admin connection-factory="rabitConnectionFactory" />
+	<!-- Declare the "messages" queue: -->
+	<rabbit:queue name="cloudDemo" durable="true" />
+	<rabbit:listener-container id="rabbitListenerContainer"
+		connection-factory="rabbitConnectionFactory">
+		<rabbit:listener queues="cloudDemo" ref="logFile"
+			method="handle" />
+	</rabbit:listener-container>
+	
 	<!-- MongoTemplate -->
 	<cloud:mongo-db-factory id="mongoDbFactory" />
 	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
@@ -43,6 +49,7 @@
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
 		p:prefix="/WEB-INF/jsp/" p:suffix=".jsp" />
 
-	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />  
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
 
 </beans>
