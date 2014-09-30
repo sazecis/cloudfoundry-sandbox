@@ -1,6 +1,6 @@
 package hu.evosoft.controller;
 
-import hu.evosoft.model.Person;
+import hu.evosoft.model.Data;
 import hu.evosoft.service.CloudRabbitService;
 import hu.evosoft.transfer.RabbitRedisTransferrer;
 
@@ -15,10 +15,10 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
-public class PersonRabbitController {
+public class CloudRabbitController {
 
-	private static Person myPerson = null;
-	
+	private static Data myData = null;
+
 	@Autowired
 	@Qualifier("cloudRabbitService")
 	private CloudRabbitService rabbitService;
@@ -27,24 +27,24 @@ public class PersonRabbitController {
 	private RabbitRedisTransferrer rabbitRedisTransferrer;
 
 	@RequestMapping(value = "/rabbit", method = RequestMethod.GET)
-	public String getPerson(ModelMap model) {
-		if (myPerson != null) {
-			model.addAttribute("person", myPerson.getName());
+	public String getData(ModelMap model) {
+		if (myData != null) {
+			model.addAttribute("data", myData.getName());
 		}
 		return "rabbit";
 	}
-	
+
 	@RequestMapping(value = "/rabbit/queue", method = RequestMethod.POST)
-	public View queuePerson(@ModelAttribute Person person, ModelMap model) {
-		myPerson = person;
-		rabbitService.queueMessage(person.getName());
+	public View queueData(@ModelAttribute Data data, ModelMap model) {
+		myData = data;
+		rabbitService.queueMessage(data.getName());
 		return new RedirectView("/rabbit");
 	}
 
 	@RequestMapping(value = "/rabbit/transfer", method = RequestMethod.GET)
-	public View transferPerson(ModelMap model) {
-		rabbitRedisTransferrer.transferPerson();
-		model.addAttribute("personList", rabbitService.retrieveOnePerson());
+	public View transferData(ModelMap model) {
+		rabbitRedisTransferrer.transferData();
+		model.addAttribute("dataList", rabbitService.retrieveOneData());
 		return new RedirectView("/redis");
 	}
 

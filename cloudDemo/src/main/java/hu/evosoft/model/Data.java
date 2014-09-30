@@ -4,16 +4,16 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
  
 @Document
-public class Person {
+public class Data {
  
     @Id
     private String id;
     private String name;
 
-    public Person() {
+    public Data() {
     }
 
-    public Person(String name) {
+    public Data(String name) {
     	this.name = name;
     }
     

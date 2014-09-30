@@ -10,5 +10,7 @@
 	</form>
 
 	${content}
+	<br />
+	<a href="/">home</a>
 </body>
 </html>

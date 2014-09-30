@@ -4,15 +4,15 @@
     <h2>Redis in CloudFoundary</h2>
  
         <form action="redis/save" method="post">
-            <label for="name">Person Name</label>
+            <label for="name">Data</label>
             <input type="text" id="name" name="name"/>
             <input type="submit" value="Submit"/>
         </form>
  
     <table border="1">
-        <c:forEach var="person" items="${personList}">
+        <c:forEach var="data" items="${dataList}">
             <tr>
-                <td>${person}</td>
+                <td>${data}</td>
             </tr>
         </c:forEach>
     </table>  

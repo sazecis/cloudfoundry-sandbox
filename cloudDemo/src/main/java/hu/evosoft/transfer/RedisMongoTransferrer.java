@@ -1,7 +1,7 @@
 package hu.evosoft.transfer;
 
-import hu.evosoft.service.PersonMongoService;
-import hu.evosoft.service.PersonRedisService;
+import hu.evosoft.service.CloudMongoService;
+import hu.evosoft.service.CloudRedisService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -11,14 +11,14 @@ import org.springframework.stereotype.Repository;
 public class RedisMongoTransferrer {
    
 	@Autowired
-	@Qualifier("personMongoService")
-	private PersonMongoService mongoService;
+	@Qualifier("cloudMongoService")
+	private CloudMongoService mongoService;
 	@Autowired
-	@Qualifier("personRedisService")
-	private PersonRedisService redisService;
+	@Qualifier("cloudRedisService")
+	private CloudRedisService redisService;
 	
-    public void transferPerson()
+    public void transferData()
     {
-    	mongoService.addPerson(redisService.getPerson());
+    	mongoService.addData(redisService.getData());
     }
 }

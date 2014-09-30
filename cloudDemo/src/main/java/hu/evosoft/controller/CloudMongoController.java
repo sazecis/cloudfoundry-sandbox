@@ -1,9 +1,8 @@
 package hu.evosoft.controller;
 
-import hu.evosoft.model.Person;
-import hu.evosoft.service.PersonMongoService;
+import hu.evosoft.model.Data;
+import hu.evosoft.service.CloudMongoService;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -16,35 +15,31 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
-public class PersonMongoController {
-
-	private static final Logger logger = Logger
-			.getLogger(PersonMongoController.class);
+public class CloudMongoController {
 
 	@Autowired
-	@Qualifier("personMongoService")
-	private PersonMongoService mongoService;
+	@Qualifier("cloudMongoService")
+	private CloudMongoService mongoService;
 	
 	@RequestMapping(value = "/mongo", method = RequestMethod.GET)
-	public String getPersonList(ModelMap model) {
-		logger.info("getPersonList 123");
-		model.addAttribute("personList", mongoService.listPerson());
+	public String getDataList(ModelMap model) {
+		model.addAttribute("dataList", mongoService.listData());
 		return "mongo";
 	}
 
 	@RequestMapping(value = "/mongo/save", method = RequestMethod.POST)
-	public View createPerson(@ModelAttribute Person person, ModelMap model) {
-		if (StringUtils.hasText(person.getId())) {
-			mongoService.updatePerson(person);
+	public View createData(@ModelAttribute Data data, ModelMap model) {
+		if (StringUtils.hasText(data.getId())) {
+			mongoService.updateData(data);
 		} else {
-			mongoService.addPerson(person);
+			mongoService.addData(data);
 		}
 		return new RedirectView("/mongo");
 	}
 
 	@RequestMapping(value = "/mongo/delete", method = RequestMethod.GET)
-	public View deletePerson(@ModelAttribute Person person, ModelMap model) {
-		mongoService.deletePerson(person);
+	public View deleteData(@ModelAttribute Data data, ModelMap model) {
+		mongoService.deleteData(data);
 		return new RedirectView("/mongo");
 	}
 	

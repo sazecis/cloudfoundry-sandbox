@@ -1,8 +1,9 @@
 
-<h4 align="center">Hello World</h4>
+<h4 align="center"><a href="read_logs">Cloud Demo</a></h4>
+<br />
+<h4 align="center">Cloud demo control panel</h4>
 <div align="center">
-	Click <a href="welcome">here</a> to get a welcome<br /> <br />
-	Click <a href="mongo">here</a> to get a mongo<br /> <br />
-	Click <a href="redis">here</a> to get a redis<br /> <br />
-	Click <a href="rabbit">here</a> to get a rabbit<br /> <br />
+	<a href="mongo">Mongo controller</a><br /> <br />
+	<a href="redis">Redis controller</a><br /> <br />
+	<a href="rabbit">Rabbit controller</a><br /> <br />
 </div>

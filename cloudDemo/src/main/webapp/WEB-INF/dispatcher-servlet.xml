@@ -20,7 +20,7 @@
          declared on the broker: -->
     <rabbit:admin connection-factory="rabitConnectionFactory"/>
     <!-- Declare the "messages" queue: -->
-    <rabbit:queue name="sazecis" durable="true"/>
+    <rabbit:queue name="cloudDemo" durable="true"/>
     
 	<!-- MongoTemplate -->
 	<cloud:mongo-db-factory id="mongoDbFactory" />

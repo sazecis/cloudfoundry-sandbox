@@ -5,17 +5,17 @@
 
 	<form action="mongo/save" method="post">
 		<input type="hidden" name="id"> 
-		<label for="name">Person Name</label> 
+		<label for="name">Data</label> 
 		<input type="text" id="name" name="name" /> 
 		<input type="submit" value="Submit" />
 	</form>
 
 	<table border="1">
-		<c:forEach var="person" items="${personList}">
+		<c:forEach var="data" items="${dataList}">
 			<tr>
-				<td>${person.name}</td>
+				<td>${data.name}</td>
 				<td><input type="button" value="delete"
-					onclick="window.location='mongo/delete?id=${person.id}'" /></td>
+					onclick="window.location='mongo/delete?id=${data.id}'" /></td>
 			</tr>
 		</c:forEach>
 	</table>

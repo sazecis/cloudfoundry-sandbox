@@ -1,7 +1,7 @@
 package hu.evosoft.controller;
 
-import hu.evosoft.model.Person;
-import hu.evosoft.service.PersonRedisService;
+import hu.evosoft.model.Data;
+import hu.evosoft.service.CloudRedisService;
 import hu.evosoft.transfer.RedisMongoTransferrer;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,31 +15,31 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
-public class PersonRedisController {
+public class CloudRedisController {
 
 	@Autowired
-	@Qualifier("personRedisService")
-	private PersonRedisService redisService;
+	@Qualifier("cloudRedisService")
+	private CloudRedisService redisService;
 
 	@Autowired
 	private RedisMongoTransferrer redisMongoTransferrer;
 
 	@RequestMapping(value = "/redis", method = RequestMethod.GET)
-	public String getPersonList(ModelMap model) {
-		model.addAttribute("personList", redisService.listPerson());
+	public String getDataList(ModelMap model) {
+		model.addAttribute("dataList", redisService.listData());
 		return "redis";
 	}
 
 	@RequestMapping(value = "/redis/save", method = RequestMethod.POST)
-	public View createPerson(@ModelAttribute Person person, ModelMap model) {
-		redisService.addPerson(person.getName());
+	public View createData(@ModelAttribute Data data, ModelMap model) {
+		redisService.addData(data.getName());
 		return new RedirectView("/redis");
 	}
 
 	@RequestMapping(value = "/redis/transfer", method = RequestMethod.GET)
-	public View transferPerson(ModelMap model) {
-		redisMongoTransferrer.transferPerson();
-		model.addAttribute("personList", redisService.listPerson());
+	public View transferData(ModelMap model) {
+		redisMongoTransferrer.transferData();
+		model.addAttribute("dataList", redisService.listData());
 		return new RedirectView("/mongo");
 	}
 

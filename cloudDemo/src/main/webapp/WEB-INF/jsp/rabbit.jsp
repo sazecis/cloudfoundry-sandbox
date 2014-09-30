@@ -5,12 +5,12 @@
 
 	<form action="rabbit/queue" method="post">
 		<input type="hidden" name="id"> 
-		<label for="name">Person Name</label> 
+		<label for="name">Data</label> 
 		<input type="text" id="name" name="name" /> 
 		<input type="submit" value="Submit" />
 	</form>
 
-	<h2>${person}</h2>
+	<h2>${data}</h2>
 	
 	<input type="button" value="retrive one element from queue and transfer to redis"
 		onclick="window.location='rabbit/transfer'" />

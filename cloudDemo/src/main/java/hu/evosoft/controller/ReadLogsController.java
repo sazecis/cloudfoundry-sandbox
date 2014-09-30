@@ -1,6 +1,5 @@
 package hu.evosoft.controller;
 
-import hu.evosoft.parser.NetStatsReader;
 import hu.evosoft.service.CloudRabbitService;
 
 import java.io.BufferedReader;

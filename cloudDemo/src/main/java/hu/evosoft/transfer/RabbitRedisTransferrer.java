@@ -1,7 +1,7 @@
 package hu.evosoft.transfer;
 
 import hu.evosoft.service.CloudRabbitService;
-import hu.evosoft.service.PersonRedisService;
+import hu.evosoft.service.CloudRedisService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,12 +14,12 @@ public class RabbitRedisTransferrer {
 	@Qualifier("cloudRabbitService")
 	private CloudRabbitService rabbitService;
 	@Autowired
-	@Qualifier("personRedisService")
-	private PersonRedisService redisService;
+	@Qualifier("cloudRedisService")
+	private CloudRedisService redisService;
 	
-    public void transferPerson()
+    public void transferData()
     {
-    	redisService.addPerson(rabbitService.retrieveOnePerson().getName());
+    	redisService.addData(rabbitService.retrieveOneData().getName());
     }
 	
 }

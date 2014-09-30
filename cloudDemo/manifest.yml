@@ -1,0 +1,9 @@
+applications:
+- name: cloud-demo
+  memory: 512M
+  host: cloud-demo
+  domain: cfapps.io
+  env: {
+    }
+  services: {
+    }
