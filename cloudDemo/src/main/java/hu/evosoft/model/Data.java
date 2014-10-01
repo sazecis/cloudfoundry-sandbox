@@ -8,13 +8,13 @@ public class Data {
  
     @Id
     private String id;
-    private String name;
+    private String data;
 
     public Data() {
     }
 
-    public Data(String name) {
-    	this.name = name;
+    public Data(String data) {
+    	this.data = data;
     }
     
     public String getId() {
@@ -23,10 +23,10 @@ public class Data {
     public void setId(String id) {
         this.id = id;
     }
-    public String getName() {
-        return name;
+    public String getData() {
+        return data;
     }
-    public void setName(String name) {
-        this.name = name;
+    public void setData(String data) {
+        this.data = data;
     }
 }

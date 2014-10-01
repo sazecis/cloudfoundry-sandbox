@@ -1,5 +1,7 @@
 package hu.evosoft.parser;
 
+import hu.evosoft.model.DestinationHost;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -11,8 +13,10 @@ import java.nio.file.Path;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class NetStatsReader {
+public class NetStatsParser {
 
+	private static final short DEST_HOST_INDEX = 4;
+	
 	public void formatFile(Path in, Path out) {
 		try (BufferedWriter writer = Files.newBufferedWriter(out)) {
 			writer.append(readFileContent(in));
@@ -30,13 +34,8 @@ public class NetStatsReader {
 		return null;
 	}
 
-	public String readFromInputStream(InputStream stream) {
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
-			return bufferedRead(reader);
-		} catch (IOException x) {
-			System.err.format("IOException: %s%n", x);
-		}
-		return null;
+	public String correctLine(String line) {
+		return replaceUnwantedSemicolonsWithComa(line);
 	}
 	
 	private String bufferedRead(BufferedReader reader) throws IOException{
@@ -49,7 +48,7 @@ public class NetStatsReader {
 		return strBuilder.toString();		
 	}
 	
-	public String replaceUnwantedSemicolonsWithComa(String line) {
+	private String replaceUnwantedSemicolonsWithComa(String line) {
 		Matcher matcher = Pattern.compile("\\(([^\\)]+)").matcher(line);
 		int pos = -1;
 		while (matcher.find(pos + 1)) {
@@ -64,4 +63,9 @@ public class NetStatsReader {
 		return line;
 	}
 
+	public static DestinationHost parseAsDestinationHost(String line) {
+		DestinationHost destHost = new DestinationHost();
+		destHost.setName(line.split(";")[DEST_HOST_INDEX]);
+		return destHost;
+	}
 }

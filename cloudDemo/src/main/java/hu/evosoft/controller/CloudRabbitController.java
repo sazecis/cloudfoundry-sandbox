@@ -22,14 +22,13 @@ public class CloudRabbitController {
 	@Autowired
 	@Qualifier("cloudRabbitService")
 	private CloudRabbitService rabbitService;
-
 	@Autowired
 	private RabbitRedisTransferrer rabbitRedisTransferrer;
 
 	@RequestMapping(value = "/rabbit", method = RequestMethod.GET)
 	public String getData(ModelMap model) {
 		if (myData != null) {
-			model.addAttribute("data", myData.getName());
+			model.addAttribute("data", myData.getData());
 		}
 		return "rabbit";
 	}
@@ -37,7 +36,7 @@ public class CloudRabbitController {
 	@RequestMapping(value = "/rabbit/queue", method = RequestMethod.POST)
 	public View queueData(@ModelAttribute Data data, ModelMap model) {
 		myData = data;
-		rabbitService.queueMessage(data.getName());
+		rabbitService.queueMessage(data.getData());
 		return new RedirectView("/rabbit");
 	}
 

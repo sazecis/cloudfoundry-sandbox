@@ -19,7 +19,7 @@ public class RabbitRedisTransferrer {
 	
     public void transferData()
     {
-    	redisService.addData(rabbitService.retrieveOneData().getName());
+    	redisService.addData(rabbitService.retrieveOneData().getData());
     }
 	
 }

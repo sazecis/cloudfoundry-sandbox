@@ -27,12 +27,13 @@ public class CloudRedisController {
 	@RequestMapping(value = "/redis", method = RequestMethod.GET)
 	public String getDataList(ModelMap model) {
 		model.addAttribute("dataList", redisService.listData());
+		model.addAttribute("destHostList", redisService.listDestionationHosts());
 		return "redis";
 	}
 
 	@RequestMapping(value = "/redis/save", method = RequestMethod.POST)
 	public View createData(@ModelAttribute Data data, ModelMap model) {
-		redisService.addData(data.getName());
+		redisService.addData(data.getData());
 		return new RedirectView("/redis");
 	}
 
@@ -43,4 +44,11 @@ public class CloudRedisController {
 		return new RedirectView("/mongo");
 	}
 
+	@RequestMapping(value = "/redis/clear", method = RequestMethod.GET)
+	public View clearData(ModelMap model) {
+		redisService.clearData();
+		model.addAttribute("dataList", redisService.listData());
+		return new RedirectView("/redis");
+	}
+	
 }

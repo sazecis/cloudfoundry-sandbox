@@ -42,5 +42,11 @@ public class CloudMongoController {
 		mongoService.deleteData(data);
 		return new RedirectView("/mongo");
 	}
-	
+
+	@RequestMapping(value = "/mongo/clear", method = RequestMethod.GET)
+	public View clearData(ModelMap model) {
+		mongoService.clearData();
+		return new RedirectView("/mongo");
+	}
+
 }

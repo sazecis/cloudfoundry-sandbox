@@ -10,22 +10,21 @@
 
 	<context:component-scan base-package="hu.evosoft" />
 
-	<bean id="logFile" class="hu.evosoft.model.LogFile" />
+	<bean id="rabbitListener" class="hu.evosoft.service.CloudRabbitListener" />
 
-	<!-- RabitMq -->
-	<cloud:rabbit-connection-factory id="rabitConnectionFactory" />
+	<!-- RabbitMq -->
+	<cloud:rabbit-connection-factory id="rabbitConnectionFactory" />
 	<!-- Set up the AmqpTemplate/RabbitTemplate: -->
 	<rabbit:template id="rabbitTemplate"
-		connection-factory="rabitConnectionFactory" />
+		connection-factory="rabbitConnectionFactory" />
 	<!-- Request that queues, exchanges and bindings be automatically declared 
 		on the broker: -->
-	<rabbit:admin connection-factory="rabitConnectionFactory" />
+	<rabbit:admin connection-factory="rabbitConnectionFactory" />
 	<!-- Declare the "messages" queue: -->
 	<rabbit:queue name="cloudDemo" durable="true" />
 	<rabbit:listener-container id="rabbitListenerContainer"
 		connection-factory="rabbitConnectionFactory">
-		<rabbit:listener queues="cloudDemo" ref="logFile"
-			method="handle" />
+		<rabbit:listener queues="cloudDemo" ref="rabbitListener" method="listen" />
 	</rabbit:listener-container>
 	
 	<!-- MongoTemplate -->

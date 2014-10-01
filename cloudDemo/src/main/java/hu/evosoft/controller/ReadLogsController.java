@@ -1,5 +1,6 @@
 package hu.evosoft.controller;
 
+import hu.evosoft.parser.NetStatsParser;
 import hu.evosoft.service.CloudRabbitService;
 
 import java.io.BufferedReader;
@@ -42,14 +43,16 @@ public class ReadLogsController {
 			try (BufferedReader reader = new BufferedReader(
 					new InputStreamReader(logFile.getInputStream()))) {
 				Iterator<String> iter = reader.lines().iterator();
+				rabbitService.SendBeginSignal();				
 				while (iter.hasNext()) {
-					rabbitService.queueMessage(iter.next());
+					rabbitService.queueMessage(new NetStatsParser().correctLine(iter.next()));
 				}
-				/*myContent = new NetStatsReader().readFromInputStream(logFile
-						.getInputStream());*/
 				myContent = "success";
 			} catch (IOException x) {
 				myContent = x.getMessage();
+			}
+			finally {
+				rabbitService.SendEndSignal();
 			}
 		} else {
 			myContent = "file is empty";

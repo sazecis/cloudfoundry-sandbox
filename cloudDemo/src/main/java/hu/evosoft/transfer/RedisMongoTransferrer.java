@@ -17,8 +17,14 @@ public class RedisMongoTransferrer {
 	@Qualifier("cloudRedisService")
 	private CloudRedisService redisService;
 	
-    public void transferData()
-    {
+    public void transferData() {
     	mongoService.addData(redisService.getData());
     }
+    
+    public void transferAllData() {
+    	for (String data : redisService.listData()) {
+    		//mongoService.addData(redisService.popData(data));
+    	}
+    }
+    
 }

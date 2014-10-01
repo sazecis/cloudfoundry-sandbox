@@ -6,7 +6,7 @@
 	<form action="rabbit/queue" method="post">
 		<input type="hidden" name="id"> 
 		<label for="name">Data</label> 
-		<input type="text" id="name" name="name" /> 
+		<input type="text" id="data" name="data" /> 
 		<input type="submit" value="Submit" />
 	</form>
 
