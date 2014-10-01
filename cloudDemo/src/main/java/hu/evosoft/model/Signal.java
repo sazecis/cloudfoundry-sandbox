@@ -15,10 +15,11 @@ public class Signal implements Serializable {
 	private SignalType type;
 	
 	public Signal(SignalType type) {
-		timeStamp = new Timestamp(new Date().getTime());
+		this.timeStamp = new Timestamp(new Date().getTime());
+		this.type = type;
 	}
 	
-	public Date getTimeStamp() {
+	public Timestamp getTimeStamp() {
 		return timeStamp;
 	}
 
@@ -26,4 +27,8 @@ public class Signal implements Serializable {
 		return type;
 	}
 	
+	@Override
+	public String toString() {
+		return String.format("[%s]: %s", timeStamp, type);
+	}
 }

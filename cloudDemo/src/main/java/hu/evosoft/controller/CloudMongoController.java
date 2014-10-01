@@ -1,6 +1,8 @@
 package hu.evosoft.controller;
 
+import hu.evosoft.model.AbstractMongoModel;
 import hu.evosoft.model.Data;
+import hu.evosoft.model.DestinationHost;
 import hu.evosoft.service.CloudMongoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,30 +24,35 @@ public class CloudMongoController {
 	private CloudMongoService mongoService;
 	
 	@RequestMapping(value = "/mongo", method = RequestMethod.GET)
-	public String getDataList(ModelMap model) {
+	public String getDocumentList(ModelMap model) {
 		model.addAttribute("dataList", mongoService.listData());
+		model.addAttribute("destHostList", mongoService.listDestinationHosts());
 		return "mongo";
 	}
 
 	@RequestMapping(value = "/mongo/save", method = RequestMethod.POST)
-	public View createData(@ModelAttribute Data data, ModelMap model) {
+	public View createDocument(@ModelAttribute Data data, ModelMap model) {
 		if (StringUtils.hasText(data.getId())) {
 			mongoService.updateData(data);
 		} else {
-			mongoService.addData(data);
+			mongoService.addDocument(data);
 		}
 		return new RedirectView("/mongo");
 	}
 
-	@RequestMapping(value = "/mongo/delete", method = RequestMethod.GET)
-	public View deleteData(@ModelAttribute Data data, ModelMap model) {
-		mongoService.deleteData(data);
+	/*@RequestMapping(value = "/mongo/delete", method = RequestMethod.GET)
+	public View deleteDocument(@ModelAttribute AbstractMongoModel document, ModelMap model) {
+		if (document instanceof Data) {
+			mongoService.deleteData((Data) document);
+		} else if (document instanceof DestinationHost) {
+			mongoService.deleteDestinationHost((DestinationHost) document);
+		}
 		return new RedirectView("/mongo");
-	}
+	}*/
 
 	@RequestMapping(value = "/mongo/clear", method = RequestMethod.GET)
-	public View clearData(ModelMap model) {
-		mongoService.clearData();
+	public View clearDocuments(ModelMap model) {
+		mongoService.clearAllDocuments();
 		return new RedirectView("/mongo");
 	}
 

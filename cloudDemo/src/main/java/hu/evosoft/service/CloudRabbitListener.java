@@ -1,5 +1,6 @@
 package hu.evosoft.service;
 
+import hu.evosoft.logger.MyLogger;
 import hu.evosoft.model.Signal;
 import hu.evosoft.model.SignalType;
 import hu.evosoft.parser.NetStatsParser;
@@ -18,12 +19,19 @@ public class CloudRabbitListener {
 	private RedisMongoTransferrer redisMongoTransferrer;
 
 	public void listen(String message) {
-		redisService.addDestinationHost(NetStatsParser.parseAsDestinationHost(message));
+		MyLogger.appendLog("String listener: ", message.toString());
+		if (NetStatsParser.isNetStatLog(message)) {
+			redisService.addDestinationHost(NetStatsParser.parseAsDestinationHost(message));
+		}
+		else {
+			redisService.addData(message);
+		}
 	}
 
 	public void listen(Signal signal) {
-		if (signal.getType().equals(SignalType.END)) {
-			redisMongoTransferrer.transferAllData();
+		MyLogger.appendLog("Signal listener: ", signal.toString());
+		if (signal != null && signal.getType().equals(SignalType.END)) {
+			redisMongoTransferrer.transferAllDestinationHosts();
 		}
 	}
 

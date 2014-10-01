@@ -61,6 +61,10 @@ public class NetStatsParser {
 		return line;
 	}
 
+	public static boolean isNetStatLog(String line) {
+		return line.split(";").length > 4 ? true : false; 
+	}
+	
 	public static DestinationHost parseAsDestinationHost(String line) {
 		DestinationHost destHost = new DestinationHost();
 		destHost.setName(line.split(";")[DEST_HOST_INDEX]);

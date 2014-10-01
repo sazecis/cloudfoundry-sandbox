@@ -1,6 +1,6 @@
 package hu.evosoft.model;
  
-public class Data extends AbstractModelWithId {
+public class Data extends AbstractMongoModel {
  
     /**
 	 * Generated UID

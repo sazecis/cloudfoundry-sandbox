@@ -7,7 +7,7 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
 		http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.3.xsd">
-
+	
 	<context:component-scan base-package="hu.evosoft" />
 
 	<bean id="rabbitListener" class="hu.evosoft.service.CloudRabbitListener" />
@@ -16,12 +16,12 @@
 	<cloud:rabbit-connection-factory id="rabbitConnectionFactory" />
 	<!-- Set up the AmqpTemplate/RabbitTemplate: -->
 	<rabbit:template id="rabbitTemplate"
-		connection-factory="rabbitConnectionFactory" />
+		connection-factory="rabbitConnectionFactory" queue="cloudDemo"/>
 	<!-- Request that queues, exchanges and bindings be automatically declared 
 		on the broker: -->
 	<rabbit:admin connection-factory="rabbitConnectionFactory" />
 	<!-- Declare the "messages" queue: -->
-	<rabbit:queue name="cloudDemo" durable="true" />
+	<rabbit:queue id="rabbitQueue" name="cloudDemo" durable="true" />
 	<rabbit:listener-container id="rabbitListenerContainer"
 		connection-factory="rabbitConnectionFactory">
 		<rabbit:listener queues="cloudDemo" ref="rabbitListener" method="listen" />

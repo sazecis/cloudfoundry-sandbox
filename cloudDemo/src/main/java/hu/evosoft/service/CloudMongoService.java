@@ -1,8 +1,9 @@
 package hu.evosoft.service;
 
-import hu.evosoft.model.AbstractModelWithId;
+import hu.evosoft.logger.MyLogger;
 import hu.evosoft.model.Data;
 import hu.evosoft.model.DestinationHost;
+import hu.evosoft.model.IMongoModel;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,28 +21,53 @@ public class CloudMongoService {
     public static final String SIMPLE_COLLECTION_NAME = "data";
     public static final String DEST_HOST_COLLECTION_NAME = "destHost";
      
-    public void addData(AbstractModelWithId data) {
-        if (!mongoTemplate.collectionExists(Data.class)) {
-            mongoTemplate.createCollection(Data.class);
+    public void addDocument(IMongoModel data) {
+    	String collectionName = null;
+    	MyLogger.appendLog(CloudMongoService.class.getSimpleName(), data.toString());
+    	if (data instanceof Data) {
+        	MyLogger.appendLog(CloudMongoService.class.getSimpleName(), "Data instance");
+    		if (!mongoTemplate.collectionExists(Data.class)) {
+	            mongoTemplate.createCollection(Data.class);
+    		}
+            collectionName = SIMPLE_COLLECTION_NAME;
+        } 
+    	else if (data instanceof DestinationHost) { 
+        	MyLogger.appendLog(CloudMongoService.class.getSimpleName(), "DestinationHost instance");
+    		if (!mongoTemplate.collectionExists(DestinationHost.class)) {
+	            mongoTemplate.createCollection(DestinationHost.class);
+    		}
+            collectionName = DEST_HOST_COLLECTION_NAME;
         }       
         data.setId(UUID.randomUUID().toString());
-        mongoTemplate.insert(data, SIMPLE_COLLECTION_NAME);
+    	MyLogger.appendLog(CloudMongoService.class.getSimpleName(), collectionName);
+        if (collectionName != null) {
+        	mongoTemplate.insert(data, collectionName);
+        }
     }
      
     public List<Data> listData() {
         return mongoTemplate.findAll(Data.class, SIMPLE_COLLECTION_NAME);
     }
-     
+
+    public List<DestinationHost> listDestinationHosts() {
+        return mongoTemplate.findAll(DestinationHost.class, DEST_HOST_COLLECTION_NAME);
+    }
+
     public void deleteData(Data data) {
         mongoTemplate.remove(data, SIMPLE_COLLECTION_NAME);
     }
-     
+
+    public void deleteDestinationHost(DestinationHost destHost) {
+        mongoTemplate.remove(destHost, DEST_HOST_COLLECTION_NAME);
+    }
+
     public void updateData(Data data) {
         mongoTemplate.insert(data, SIMPLE_COLLECTION_NAME);      
     }
 
-	public void clearData() {
+	public void clearAllDocuments() {
 		mongoTemplate.dropCollection(SIMPLE_COLLECTION_NAME);
+		mongoTemplate.dropCollection(DEST_HOST_COLLECTION_NAME);
 	}
 	
 	public void addAndAggregateDestHosts(DestinationHost destHost) {

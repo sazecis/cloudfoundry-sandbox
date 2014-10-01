@@ -20,7 +20,7 @@
 	<a href="/">home</a>
 </p>
 <p>
-	<h2>Simplem data table. Key: myData</h2>
+	<h4>Simplem data table. Key: myData</h4>
 	<table border="1">
 		<c:forEach var="data" items="${dataList}">
 			<tr>
@@ -30,7 +30,7 @@
 	</table>
 </p>
 <p>
-	<h2>Destination host table. Key: DestHost</h2>
+	<h4>Destination host table. Key: DestHost</h4>
 	<table border="1">
 		<c:forEach var="destHost" items="${destHostList}">
 			<tr>

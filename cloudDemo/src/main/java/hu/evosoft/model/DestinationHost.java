@@ -1,6 +1,6 @@
 package hu.evosoft.model;
 
-public class DestinationHost extends AbstractModelWithId {
+public class DestinationHost extends AbstractMongoModel {
 	
 	/**
 	 * Generated UID

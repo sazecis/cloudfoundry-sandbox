@@ -6,7 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public abstract class AbstractModelWithId  implements Serializable{
+public abstract class AbstractMongoModel  implements Serializable, IMongoModel{
 
 	/**
 	 * Generated UID

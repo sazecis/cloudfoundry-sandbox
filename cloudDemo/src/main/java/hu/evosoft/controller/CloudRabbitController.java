@@ -1,5 +1,6 @@
 package hu.evosoft.controller;
 
+import hu.evosoft.logger.MyLogger;
 import hu.evosoft.model.Data;
 import hu.evosoft.service.CloudRabbitService;
 import hu.evosoft.transfer.RabbitRedisTransferrer;
@@ -36,6 +37,7 @@ public class CloudRabbitController {
 	@RequestMapping(value = "/rabbit/queue", method = RequestMethod.POST)
 	public View queueData(@ModelAttribute Data data, ModelMap model) {
 		myData = data;
+		MyLogger.appendLog("Test data: " + data.getData());
 		rabbitService.queueMessage(data.getData());
 		return new RedirectView("/rabbit");
 	}
