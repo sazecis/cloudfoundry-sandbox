@@ -50,9 +50,10 @@ public class CloudRedisService {
     	return data;		
     }
 
-    public Data popData(Data data) {
-    	data.setData(listOps.leftPop(SIMPLE_KEY));
-    	return data;		
+    public List<DestinationHost> popAllDestionationHosts() {
+    	List<DestinationHost> list = listDestionationHosts();
+    	redisTemplate.delete(DEST_HOST_KEY);
+    	return list;		
     }
 
     public void clearData() {

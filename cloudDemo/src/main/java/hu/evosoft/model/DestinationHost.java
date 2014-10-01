@@ -1,13 +1,11 @@
 package hu.evosoft.model;
 
-import java.io.Serializable;
-
-public class DestinationHost implements Serializable {
-
+public class DestinationHost extends AbstractModelWithId {
+	
 	/**
-	 * Generated version UID
+	 * Generated UID
 	 */
-	private static final long serialVersionUID = 3470990918034540477L;
+	private static final long serialVersionUID = 1679793298745891714L;
 	
 	private String name;
 	private int count = 1;

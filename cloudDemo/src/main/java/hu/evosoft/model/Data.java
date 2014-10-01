@@ -1,14 +1,13 @@
 package hu.evosoft.model;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
  
-@Document
-public class Data {
+public class Data extends AbstractModelWithId {
  
-    @Id
-    private String id;
-    private String data;
+    /**
+	 * Generated UID
+	 */
+	private static final long serialVersionUID = -4509338178469037612L;
+	
+	private String data;
 
     public Data() {
     }
@@ -17,12 +16,6 @@ public class Data {
     	this.data = data;
     }
     
-    public String getId() {
-        return id;
-    }
-    public void setId(String id) {
-        this.id = id;
-    }
     public String getData() {
         return data;
     }

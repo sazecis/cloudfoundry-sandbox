@@ -1,5 +1,6 @@
 package hu.evosoft.service;
 
+import hu.evosoft.model.AbstractModelWithId;
 import hu.evosoft.model.Data;
 import hu.evosoft.model.DestinationHost;
 
@@ -19,7 +20,7 @@ public class CloudMongoService {
     public static final String SIMPLE_COLLECTION_NAME = "data";
     public static final String DEST_HOST_COLLECTION_NAME = "destHost";
      
-    public void addData(Data data) {
+    public void addData(AbstractModelWithId data) {
         if (!mongoTemplate.collectionExists(Data.class)) {
             mongoTemplate.createCollection(Data.class);
         }       

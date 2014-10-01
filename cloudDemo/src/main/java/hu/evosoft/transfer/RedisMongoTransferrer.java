@@ -1,5 +1,6 @@
 package hu.evosoft.transfer;
 
+import hu.evosoft.model.DestinationHost;
 import hu.evosoft.service.CloudMongoService;
 import hu.evosoft.service.CloudRedisService;
 
@@ -22,8 +23,8 @@ public class RedisMongoTransferrer {
     }
     
     public void transferAllData() {
-    	for (String data : redisService.listData()) {
-    		//mongoService.addData(redisService.popData(data));
+    	for (DestinationHost destHost : redisService.popAllDestionationHosts()) {
+    		mongoService.addData(destHost);
     	}
     }
     
