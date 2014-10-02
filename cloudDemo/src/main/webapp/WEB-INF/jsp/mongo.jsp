@@ -10,7 +10,8 @@
 		<input type="submit" value="Submit" />
 	</form>
 	<br/>
-    <input type="button" value="clear data" onclick="window.location='mongo/clear'"/>
+    <input type="button" value="clear all" onclick="window.location='mongo/clear'"/>
+    <input type="button" value="aggregate" onclick="window.location='mongo/aggregate'"/>
     <br/>    
 	<a href="/">home</a>
 	<br/>
@@ -33,8 +34,9 @@
 	<table border="1">
 		<c:forEach var="destHost" items="${destHostList}">
 			<tr>
+				<td>${destHost.id}</td>
 				<td>${destHost.name}</td>
-				<td>${destHost.count}</td>
+				<td>${destHost.value}</td>
 				<!-- td><input type="button" value="delete"
 					onclick="window.location='mongo/delete?id=${destHost.id}'" /></td-->
 			</tr>

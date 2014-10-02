@@ -1,8 +1,6 @@
 package hu.evosoft.controller;
 
-import hu.evosoft.model.AbstractMongoModel;
 import hu.evosoft.model.Data;
-import hu.evosoft.model.DestinationHost;
 import hu.evosoft.service.CloudMongoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,22 +31,12 @@ public class CloudMongoController {
 	@RequestMapping(value = "/mongo/save", method = RequestMethod.POST)
 	public View createDocument(@ModelAttribute Data data, ModelMap model) {
 		if (StringUtils.hasText(data.getId())) {
-			mongoService.updateData(data);
+			mongoService.updateDocument(data);
 		} else {
 			mongoService.addDocument(data);
 		}
 		return new RedirectView("/mongo");
 	}
-
-	/*@RequestMapping(value = "/mongo/delete", method = RequestMethod.GET)
-	public View deleteDocument(@ModelAttribute AbstractMongoModel document, ModelMap model) {
-		if (document instanceof Data) {
-			mongoService.deleteData((Data) document);
-		} else if (document instanceof DestinationHost) {
-			mongoService.deleteDestinationHost((DestinationHost) document);
-		}
-		return new RedirectView("/mongo");
-	}*/
 
 	@RequestMapping(value = "/mongo/clear", method = RequestMethod.GET)
 	public View clearDocuments(ModelMap model) {
@@ -56,4 +44,11 @@ public class CloudMongoController {
 		return new RedirectView("/mongo");
 	}
 
+	@RequestMapping(value = "/mongo/aggregate", method = RequestMethod.GET)
+	public View aggregateDocuments(ModelMap model) {
+		mongoService.mapReduceDestinationHost();
+		return new RedirectView("/mongo");
+	}
+
+	
 }

@@ -5,11 +5,14 @@ import hu.evosoft.model.Data;
 import hu.evosoft.model.DestinationHost;
 import hu.evosoft.model.IMongoModel;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.mapreduce.MapReduceOptions;
+import org.springframework.data.mongodb.core.mapreduce.MapReduceResults;
 import org.springframework.stereotype.Repository;
  
 @Repository
@@ -53,15 +56,15 @@ public class CloudMongoService {
         return mongoTemplate.findAll(DestinationHost.class, DEST_HOST_COLLECTION_NAME);
     }
 
-    public void deleteData(Data data) {
+    public void deleteDocument(Data data) {
         mongoTemplate.remove(data, SIMPLE_COLLECTION_NAME);
     }
-
-    public void deleteDestinationHost(DestinationHost destHost) {
+    
+    public void deleteDocument(DestinationHost destHost) {
         mongoTemplate.remove(destHost, DEST_HOST_COLLECTION_NAME);
     }
 
-    public void updateData(Data data) {
+    public void updateDocument(Data data) {
         mongoTemplate.insert(data, SIMPLE_COLLECTION_NAME);      
     }
 
@@ -70,9 +73,15 @@ public class CloudMongoService {
 		mongoTemplate.dropCollection(DEST_HOST_COLLECTION_NAME);
 	}
 	
-	public void addAndAggregateDestHosts(DestinationHost destHost) {
-		// TODO
-		//mongoTemplate.mapReduce(inputCollectionName, mapFunction, reduceFunction, entityClass)
+	public void mapReduceDestinationHost() {
+		/*MapReduceOptions options = MapReduceOptions.options();
+		options.outputCollection(DEST_HOST_COLLECTION_NAME);*/
+		MapReduceResults<DestinationHost> results = 
+				mongoTemplate.mapReduce(DEST_HOST_COLLECTION_NAME, "classpath:js/map.js", "classpath:js/reduce.js", DestinationHost.class);
+		mongoTemplate.dropCollection(DEST_HOST_COLLECTION_NAME);
+		for (DestinationHost dest : results) {
+			mongoTemplate.insert(dest, DEST_HOST_COLLECTION_NAME);			
+		}
 	}
 	
 }
