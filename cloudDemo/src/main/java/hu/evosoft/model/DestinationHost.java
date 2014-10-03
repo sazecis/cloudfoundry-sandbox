@@ -8,7 +8,15 @@ public class DestinationHost extends AbstractMongoModel {
 	private static final long serialVersionUID = 1679793298745891714L;
 	
 	private String name;
-	private int value;
+
+	public DestinationHost() {
+		
+	}
+	
+	public DestinationHost(String name, int value) {
+		this.name = name;
+		setValue(value);
+	}
 	
 	public String getName() {
 		return name;
@@ -16,21 +24,11 @@ public class DestinationHost extends AbstractMongoModel {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public int getValue() {
-		return value;
-	}
-	public void setValue(int value) {
-		this.value = value;
-	}
-	
-	public int increaseCount()
-	{
-		return value++;
-	}
 	
 	@Override
 	public String toString() {
-		return String.format("{[name: %s][value: %s]}", name, value);
+		return String.format("{id: %s}, {name: %s}, {value: %s}", 
+				getId(), getName(), getValue());
 	}
 	
 }

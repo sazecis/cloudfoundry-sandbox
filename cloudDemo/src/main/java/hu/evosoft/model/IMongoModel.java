@@ -5,4 +5,8 @@ public interface IMongoModel {
 	String getId();
 	
 	void setId(String id);
+	
+	int getValue();
+	
+	void setValue(int value);
 }

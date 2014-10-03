@@ -5,13 +5,11 @@ import hu.evosoft.model.Data;
 import hu.evosoft.model.DestinationHost;
 import hu.evosoft.model.IMongoModel;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.mapreduce.MapReduceOptions;
 import org.springframework.data.mongodb.core.mapreduce.MapReduceResults;
 import org.springframework.stereotype.Repository;
  
@@ -74,13 +72,13 @@ public class CloudMongoService {
 	}
 	
 	public void mapReduceDestinationHost() {
-		/*MapReduceOptions options = MapReduceOptions.options();
-		options.outputCollection(DEST_HOST_COLLECTION_NAME);*/
 		MapReduceResults<DestinationHost> results = 
-				mongoTemplate.mapReduce(DEST_HOST_COLLECTION_NAME, "classpath:js/map.js", "classpath:js/reduce.js", DestinationHost.class);
+				mongoTemplate.mapReduce(DEST_HOST_COLLECTION_NAME, 
+						"classpath:js/map.js", "classpath:js/reduce.js", DestinationHost.class);
 		mongoTemplate.dropCollection(DEST_HOST_COLLECTION_NAME);
 		for (DestinationHost dest : results) {
-			mongoTemplate.insert(dest, DEST_HOST_COLLECTION_NAME);			
+			mongoTemplate.insert(new DestinationHost(dest.getId(), dest.getValue()), 
+					DEST_HOST_COLLECTION_NAME);			
 		}
 	}
 	

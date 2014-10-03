@@ -1,3 +1,3 @@
 function map () {
-    emit(this.name, 1);
+    emit(this.name, this.value);
 }

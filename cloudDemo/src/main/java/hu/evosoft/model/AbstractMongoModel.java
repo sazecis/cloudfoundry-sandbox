@@ -1,6 +1,7 @@
 package hu.evosoft.model;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -14,7 +15,8 @@ public abstract class AbstractMongoModel  implements Serializable, IMongoModel{
 	private static final long serialVersionUID = 4120933676365616922L;
 	
 	@Id
-	private String id;	
+	private String id = UUID.randomUUID().toString();	
+	private int value = 1;
 	
 	public String getId() {
 		return id;
@@ -22,6 +24,13 @@ public abstract class AbstractMongoModel  implements Serializable, IMongoModel{
 	
 	public void setId(String id) {
 		this.id = id;
+	}
+	
+	public int getValue() {
+		return value;
+	}
+	public void setValue(int value) {
+		this.value = value;
 	}
 	
 }
