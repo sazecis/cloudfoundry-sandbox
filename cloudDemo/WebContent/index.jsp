@@ -6,4 +6,6 @@
 	<a href="mongo">Mongo controller</a><br /> <br />
 	<a href="redis">Redis controller</a><br /> <br />
 	<a href="rabbit">Rabbit controller</a><br /> <br />
+	<br /><br />
+	<a href="logs">Logs</a><br /> <br />
 </div>

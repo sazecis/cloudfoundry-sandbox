@@ -65,9 +65,7 @@ public class NetStatsParser {
 		return line.split(";").length > 4 ? true : false; 
 	}
 	
-	public static DestinationHost parseAsDestinationHost(String line) {
-		DestinationHost destHost = new DestinationHost();
-		destHost.setName(line.split(";")[DEST_HOST_INDEX]);
-		return destHost;
+	public static String getDestinationHost(String line) {
+		return line.split(";")[DEST_HOST_INDEX];
 	}
 }

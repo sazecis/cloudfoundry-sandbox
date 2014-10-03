@@ -36,7 +36,7 @@
 	<!-- RedisTemplate -->
 	<cloud:redis-connection-factory id="redisConnectionFactory" />
 	<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate"
-		p:connection-factory-ref="redisConnectionFactory" />
+		p:connection-factory-ref="redisConnectionFactory"/>
 
 	<!-- Use this post processor to translate any MongoExceptions thrown in 
 		@Repository annotated classes -->

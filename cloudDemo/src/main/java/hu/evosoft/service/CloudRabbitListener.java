@@ -19,9 +19,8 @@ public class CloudRabbitListener {
 	private RedisMongoTransferrer redisMongoTransferrer;
 
 	public void listen(String message) {
-		MyLogger.appendLog("String listener: ", message.toString());
 		if (NetStatsParser.isNetStatLog(message)) {
-			redisService.addDestinationHost(NetStatsParser.parseAsDestinationHost(message));
+			redisService.addDestinationHost(NetStatsParser.getDestinationHost(message));
 		}
 		else {
 			redisService.addData(message);

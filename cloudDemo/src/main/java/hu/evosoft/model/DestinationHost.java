@@ -31,4 +31,14 @@ public class DestinationHost extends AbstractMongoModel {
 				getId(), getName(), getValue());
 	}
 	
+	@Override
+	public int hashCode() {
+		return name.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object destHost) {
+		return this.getName().equals(((DestinationHost) destHost).getName());
+	}
+	
 }

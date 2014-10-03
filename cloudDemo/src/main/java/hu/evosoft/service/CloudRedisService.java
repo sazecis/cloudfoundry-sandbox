@@ -1,15 +1,20 @@
 package hu.evosoft.service;
 
+import hu.evosoft.logger.MyLogger;
 import hu.evosoft.model.Data;
 import hu.evosoft.model.DestinationHost;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -17,64 +22,74 @@ public class CloudRedisService {
 
     @Autowired 
     private RedisTemplate<String, String> redisTemplate;
-    /*@Autowired @Qualifier("redisTemplate")
-    private RedisTemplate<DestinationHost, Integer> redisTemplateDestHost;*/
     
     private static final String SIMPLE_KEY = "myData";
-    private static final String DEST_HOST_KEY = "DestHost";
+    private static final String MY_KEYS = "MY_KEYS";
+    
+    private static final String INC_STEP = "1";  
     
     // inject the template as ListOperations
     // can also inject as Value, Set, ZSet, and HashOperations
     @Resource(name="redisTemplate")
     private ListOperations<String, String> listOps;
     @Resource(name="redisTemplate")
-    private ListOperations<String, DestinationHost> listOpsDestHost;
-    /*@Resource(name="redisTemplate")
-    private ListOperations<DestinationHost, Integer> listOpsDestHostTemp;*/
-
+    private SetOperations<String, String> setOps;
+    @Resource(name="redisTemplate")
+    private ValueOperations<String, String> valOps;
+    
     public void addData(String name) {
-		/*MyLogger.appendLog("Redis keys");
-		listOpsDestHostTemp.rightPush(new DestinationHost("Test", 1), 1);
-    	try {
-			for (DestinationHost key : redisTemplateDestHost.keys(DestinationHost.class.newInstance())) {
-				MyLogger.appendLog("Redis key:", key.toString());
-			}
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
     	listOps.rightPush(SIMPLE_KEY, name);
-    }
-
-    public void addDestinationHost(DestinationHost destHost) {
-    	listOpsDestHost.rightPush(DEST_HOST_KEY, destHost);
     }
 
     public List<String> listData() {
     	return listOps.range(SIMPLE_KEY, 0, listOps.size(SIMPLE_KEY));
     }
 
-    public List<DestinationHost> listDestionationHosts() {
-    	return listOpsDestHost.range(DEST_HOST_KEY, 0, listOps.size(DEST_HOST_KEY));
-    }
-    
     public Data getData() {
     	Data data = new Data();
     	data.setData(listOps.leftPop(SIMPLE_KEY));
     	return data;		
     }
 
+    public void addDestinationHost(String key) {
+    	if (!redisTemplate.hasKey(key)) {
+    		setOps.add(MY_KEYS, key);
+    	} 
+		listOps.rightPush(key, INC_STEP);
+    }
+
+    public List<String> listDestionationHosts() {
+    	MyLogger.appendLog(MY_KEYS + ": " + setOps.members(MY_KEYS).toString());
+    	List<String> list = new ArrayList<String>();
+    	for (String key : getKeys()) {
+    		list.add(String.format("%s %s", key, listOps.range(key, 0, listOps.size(key))));
+    	}
+    	return list;
+    }
+    
     public List<DestinationHost> popAllDestionationHosts() {
-    	List<DestinationHost> list = listDestionationHosts();
-    	redisTemplate.delete(DEST_HOST_KEY);
+    	List<DestinationHost> list = new ArrayList<DestinationHost>();
+    	for (String key : getKeys()) {
+    		list.add(new DestinationHost(key, listOps.size(key).intValue()));
+    		flushKey(key);
+    	}
     	return list;		
     }
 
+    private Set<String> getKeys() {
+    	return setOps.members(MY_KEYS);
+    }
+    
+    private void flushKey(String key) {
+    	redisTemplate.delete(key);
+    	setOps.remove(MY_KEYS, key);
+    }
+    
     public void clearData() {
+    	for (String key : getKeys()) {
+    		redisTemplate.delete(key);
+    	}
+		redisTemplate.delete(MY_KEYS);
     	redisTemplate.delete(SIMPLE_KEY);
-    	redisTemplate.delete(DEST_HOST_KEY);
     }
 }
