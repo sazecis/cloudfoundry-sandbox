@@ -1,9 +1,10 @@
 package hu.evosoft.service;
 
 import hu.evosoft.model.Data;
-import hu.evosoft.model.Signal;
-import hu.evosoft.model.SignalType;
+import hu.evosoft.rabbit.Signal;
+import hu.evosoft.rabbit.SignalType;
 
+import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,6 +18,9 @@ public class CloudRabbitService {
 	@Autowired 
     private RabbitTemplate rabbitTemplate;
 	@Autowired
+	@Qualifier("rabbitAdmin")
+	private AmqpAdmin rabbitAdmin;
+	@Autowired
 	@Qualifier("cloudRedisService")
 	private CloudRedisService redisService;
 	
@@ -28,12 +32,17 @@ public class CloudRabbitService {
     	return new Data((String) rabbitTemplate.receiveAndConvert(QUEUE_NAME));    		
     }
 
-	public void SendBeginSignal() {
+	public void sendBeginSignal() {
         rabbitTemplate.convertAndSend(QUEUE_NAME, new Signal(SignalType.BEGIN));
 	}
 
-	public void SendEndSignal() {
+	public void sendEndSignal() {
         rabbitTemplate.convertAndSend(QUEUE_NAME, new Signal(SignalType.END));		
+	}
+	
+	public void purgeQueue()
+	{
+		rabbitAdmin.purgeQueue(QUEUE_NAME, false);
 	}
        
 }

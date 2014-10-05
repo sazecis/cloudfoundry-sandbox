@@ -1,4 +1,4 @@
-package hu.evosoft.model;
+package hu.evosoft.rabbit;
 
 public enum SignalType {
 

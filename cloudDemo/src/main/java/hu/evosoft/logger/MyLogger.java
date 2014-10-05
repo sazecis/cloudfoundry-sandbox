@@ -15,6 +15,17 @@ public class MyLogger {
 		log.append("<br/>");
 	}
 	
+	
+	public static void appendLog(String line, StackTraceElement[] stackTraces) {
+		log.append(new Timestamp(new Date().getTime()) + " ");
+		log.append(line + " ");
+		for (StackTraceElement stackTrace : stackTraces) {
+			log.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+			log.append(stackTrace.toString());
+			log.append("<br/>");		
+		}
+	}
+
 	public static String getLogs() {
 		return log.toString();
 	}

@@ -2,6 +2,7 @@ package hu.evosoft.controller;
 
 import hu.evosoft.logger.MyLogger;
 import hu.evosoft.model.Data;
+import hu.evosoft.service.CloudRabbitListener;
 import hu.evosoft.service.CloudRabbitService;
 import hu.evosoft.transfer.RabbitRedisTransferrer;
 
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.view.RedirectView;
 public class CloudRabbitController {
 
 	private static Data myData = null;
+	private static String myChecked = "";
 
 	@Autowired
 	@Qualifier("cloudRabbitService")
@@ -31,6 +33,7 @@ public class CloudRabbitController {
 		if (myData != null) {
 			model.addAttribute("data", myData.getData());
 		}
+		model.addAttribute("state", myChecked);
 		return "rabbit";
 	}
 
@@ -49,4 +52,18 @@ public class CloudRabbitController {
 		return new RedirectView("/redis");
 	}
 
+	@RequestMapping(value = "/rabbit/purge", method = RequestMethod.GET)
+	public View purgeQueue(ModelMap model) {
+		myData = null;
+		rabbitService.purgeQueue();
+		return new RedirectView("/rabbit");
+	}
+	
+	@RequestMapping(value = "/rabbit/nulldev", method = RequestMethod.GET)
+	public View turnOnNullDevListener(ModelMap model) {
+		myChecked = CloudRabbitListener.changeDevNullState();
+		return new RedirectView("/rabbit");
+	}
+	
+	
 }

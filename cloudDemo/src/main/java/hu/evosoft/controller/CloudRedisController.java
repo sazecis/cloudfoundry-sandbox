@@ -27,7 +27,7 @@ public class CloudRedisController {
 	@RequestMapping(value = "/redis", method = RequestMethod.GET)
 	public String getDataList(ModelMap model) {
 		model.addAttribute("dataList", redisService.listData());
-		model.addAttribute("destHostList", redisService.listDestionationHosts());
+		model.addAttribute("destHostList", redisService.listNetStatInfo());
 		return "redis";
 	}
 

@@ -1,6 +1,8 @@
 package hu.evosoft.controller;
 
 import hu.evosoft.model.Data;
+import hu.evosoft.model.DestinationHost;
+import hu.evosoft.model.LogEntryDate;
 import hu.evosoft.service.CloudMongoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +25,9 @@ public class CloudMongoController {
 	
 	@RequestMapping(value = "/mongo", method = RequestMethod.GET)
 	public String getDocumentList(ModelMap model) {
-		model.addAttribute("dataList", mongoService.listData());
-		model.addAttribute("destHostList", mongoService.listDestinationHosts());
+		model.addAttribute("dataList", mongoService.listDocuments(Data.class));
+		model.addAttribute("destHostList", mongoService.listDocuments(DestinationHost.class));
+		model.addAttribute("logDataList", mongoService.listDocuments(LogEntryDate.class));
 		return "mongo";
 	}
 
@@ -44,11 +47,4 @@ public class CloudMongoController {
 		return new RedirectView("/mongo");
 	}
 
-	@RequestMapping(value = "/mongo/aggregate", method = RequestMethod.GET)
-	public View aggregateDocuments(ModelMap model) {
-		mongoService.mapReduceDestinationHost();
-		return new RedirectView("/mongo");
-	}
-
-	
 }

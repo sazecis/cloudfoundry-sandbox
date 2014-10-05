@@ -1,5 +1,6 @@
 package hu.evosoft.model;
- 
+
+@Deprecated
 public class Data extends AbstractMongoModel {
  
     /**
@@ -22,4 +23,17 @@ public class Data extends AbstractMongoModel {
     public void setData(String data) {
         this.data = data;
     }
+
+	@Override
+	public void exchangeInnerItems() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String mapper() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

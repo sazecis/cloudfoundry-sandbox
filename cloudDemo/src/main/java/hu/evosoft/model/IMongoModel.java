@@ -9,4 +9,11 @@ public interface IMongoModel {
 	int getValue();
 	
 	void setValue(int value);
+	
+	String collectionName();
+	
+	void exchangeInnerItems();
+	
+	String mapper();
+
 }

@@ -19,9 +19,9 @@
 		connection-factory="rabbitConnectionFactory" queue="cloudDemo"/>
 	<!-- Request that queues, exchanges and bindings be automatically declared 
 		on the broker: -->
-	<rabbit:admin connection-factory="rabbitConnectionFactory" />
+	<rabbit:admin id="rabbitAdmin" connection-factory="rabbitConnectionFactory" />
 	<!-- Declare the "messages" queue: -->
-	<rabbit:queue id="rabbitQueue" name="cloudDemo" durable="true" />
+	<rabbit:queue id="rabbitQueue" name="cloudDemo" durable="false" />
 	<rabbit:listener-container id="rabbitListenerContainer"
 		connection-factory="rabbitConnectionFactory">
 		<rabbit:listener queues="cloudDemo" ref="rabbitListener" method="listen" />

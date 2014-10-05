@@ -1,6 +1,6 @@
 package hu.evosoft.parser;
 
-import hu.evosoft.model.DestinationHost;
+import hu.evosoft.logger.MyLogger;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -8,17 +8,23 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class NetStatsParser {
 
+	private static final short TIMESTAMP_INDEX = 0;
 	private static final short DEST_HOST_INDEX = 4;
+	private static final long TEN_MINUTES_IN_MILIS = 600000;
 	
 	public void formatFile(Path in, Path out) {
 		try (BufferedWriter writer = Files.newBufferedWriter(out)) {
 			writer.append(readFileContent(in));
 		} catch (IOException x) {
+			MyLogger.appendLog("formatFile ", x.toString());
+			MyLogger.appendLog("formatFile ", x.getStackTrace());
 			System.err.format("IOException: %s%n", x);
 		}
 	}
@@ -27,6 +33,8 @@ public class NetStatsParser {
 		try (BufferedReader reader = Files.newBufferedReader(path, Charset.defaultCharset())) {
 			return bufferedRead(reader);
 		} catch (IOException x) {
+			MyLogger.appendLog("formatFile ", x.toString());
+			MyLogger.appendLog("formatFile ", x.getStackTrace());
 			System.err.format("IOException: %s%n", x);
 		}
 		return null;
@@ -67,5 +75,32 @@ public class NetStatsParser {
 	
 	public static String getDestinationHost(String line) {
 		return line.split(";")[DEST_HOST_INDEX];
+	}
+	
+	public static Long getTimeStamp(String line) {
+		String date = line.split(";")[TIMESTAMP_INDEX];
+		if (isValidDateFormat(date)){
+			return convertToTenMinutesInterval(Timestamp.valueOf(date)).getTime();
+		}
+		return null;
+	}
+	
+	private static Timestamp convertToTenMinutesInterval(Timestamp timestamp) {
+		return new Timestamp(timestamp.getTime() - timestamp.getTime() % TEN_MINUTES_IN_MILIS);
+	}
+	
+	public static boolean isValidDateFormat(String date) {
+		return Pattern.compile("(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d{3})").matcher(date).matches() ||
+			   Pattern.compile("(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d{1})").matcher(date).matches();
+	}
+
+	public static boolean isDateInMilisecond(String milis) {
+		try {
+			new Date(Long.parseLong(milis));
+			return true;			
+		}
+		catch (Exception ex) {
+			return false;
+		}
 	}
 }

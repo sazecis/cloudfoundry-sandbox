@@ -1,9 +1,8 @@
 package hu.evosoft.service;
 
 import hu.evosoft.logger.MyLogger;
-import hu.evosoft.model.Data;
-import hu.evosoft.model.DestinationHost;
 import hu.evosoft.model.IMongoModel;
+import hu.evosoft.model.MongoModelList;
 
 import java.util.List;
 import java.util.UUID;
@@ -12,74 +11,60 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.mapreduce.MapReduceResults;
 import org.springframework.stereotype.Repository;
- 
+
 @Repository
 public class CloudMongoService {
-     
-    @Autowired 
-    private MongoTemplate mongoTemplate;
-     
-    public static final String SIMPLE_COLLECTION_NAME = "data";
-    public static final String DEST_HOST_COLLECTION_NAME = "destHost";
-     
-    public void addDocument(IMongoModel data) {
-    	String collectionName = null;
-    	MyLogger.appendLog(CloudMongoService.class.getSimpleName(), data.toString());
-    	if (data instanceof Data) {
-        	MyLogger.appendLog(CloudMongoService.class.getSimpleName(), "Data instance");
-    		if (!mongoTemplate.collectionExists(Data.class)) {
-	            mongoTemplate.createCollection(Data.class);
-    		}
-            collectionName = SIMPLE_COLLECTION_NAME;
-        } 
-    	else if (data instanceof DestinationHost) { 
-        	MyLogger.appendLog(CloudMongoService.class.getSimpleName(), "DestinationHost instance");
-    		if (!mongoTemplate.collectionExists(DestinationHost.class)) {
-	            mongoTemplate.createCollection(DestinationHost.class);
-    		}
-            collectionName = DEST_HOST_COLLECTION_NAME;
-        }       
-        data.setId(UUID.randomUUID().toString());
-    	MyLogger.appendLog(CloudMongoService.class.getSimpleName(), collectionName);
-        if (collectionName != null) {
-        	mongoTemplate.insert(data, collectionName);
-        }
-    }
-     
-    public List<Data> listData() {
-        return mongoTemplate.findAll(Data.class, SIMPLE_COLLECTION_NAME);
-    }
 
-    public List<DestinationHost> listDestinationHosts() {
-        return mongoTemplate.findAll(DestinationHost.class, DEST_HOST_COLLECTION_NAME);
-    }
+	@Autowired
+	private MongoTemplate mongoTemplate;
 
-    public void deleteDocument(Data data) {
-        mongoTemplate.remove(data, SIMPLE_COLLECTION_NAME);
-    }
-    
-    public void deleteDocument(DestinationHost destHost) {
-        mongoTemplate.remove(destHost, DEST_HOST_COLLECTION_NAME);
-    }
+	public void addDocument(IMongoModel document) {
+		MyLogger.appendLog(CloudMongoService.class.getSimpleName(),
+				document.toString(), document.getClass().getSimpleName(),
+				document.collectionName());
+		if (!mongoTemplate.collectionExists(document.getClass())) {
+			mongoTemplate.createCollection(document.getClass());
+		}
+		document.setId(UUID.randomUUID().toString());
+		mongoTemplate.insert(document, document.collectionName());
+	}
 
-    public void updateDocument(Data data) {
-        mongoTemplate.insert(data, SIMPLE_COLLECTION_NAME);      
-    }
+	public void deleteDocument(IMongoModel document) {
+		mongoTemplate.remove(document, document.getClass().getSimpleName());
+	}
+
+	public void updateDocument(IMongoModel document) {
+		mongoTemplate.insert(document, document.getClass().getSimpleName());
+	}
+
+	public <T> List<T> listDocuments(Class<T> type) {
+		return mongoTemplate.findAll(type, type.getSimpleName());
+	}
+
+	public <T> void clearDocuments(Class<T> type) {
+		mongoTemplate.dropCollection(type);
+	}
 
 	public void clearAllDocuments() {
-		mongoTemplate.dropCollection(SIMPLE_COLLECTION_NAME);
-		mongoTemplate.dropCollection(DEST_HOST_COLLECTION_NAME);
-	}
-	
-	public void mapReduceDestinationHost() {
-		MapReduceResults<DestinationHost> results = 
-				mongoTemplate.mapReduce(DEST_HOST_COLLECTION_NAME, 
-						"classpath:js/map.js", "classpath:js/reduce.js", DestinationHost.class);
-		mongoTemplate.dropCollection(DEST_HOST_COLLECTION_NAME);
-		for (DestinationHost dest : results) {
-			mongoTemplate.insert(new DestinationHost(dest.getId(), dest.getValue()), 
-					DEST_HOST_COLLECTION_NAME);			
+		for (IMongoModel type : MongoModelList.getModelSet()) {
+			mongoTemplate.dropCollection(type.getClass().getSimpleName());
 		}
 	}
-	
+
+	public <T> void mapReduce(Class<T> type, String mapper) {
+		MyLogger.appendLog("Collection exists?", type.getSimpleName(), Boolean.toString(mongoTemplate.collectionExists(type)));		
+		MapReduceResults<T> results = mongoTemplate.mapReduce(
+				type.getSimpleName(), mapper,
+				"classpath:js/reduce.js", type);
+		mongoTemplate.dropCollection(type.getSimpleName());
+		MyLogger.appendLog("Collection exists after drop too?", type.getSimpleName(), 
+				Boolean.toString(mongoTemplate.collectionExists(type)));		
+		for (T result : results) {
+			IMongoModel aggregated = (IMongoModel) result;
+			aggregated.exchangeInnerItems();
+			MyLogger.appendLog("mongoTemplate.insert", aggregated.toString(), type.getSimpleName());
+			mongoTemplate.insert(aggregated, type.getSimpleName());
+		}
+	}
+
 }

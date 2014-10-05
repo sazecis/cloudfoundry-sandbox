@@ -12,8 +12,11 @@
 
 	<h2>${data}</h2>
 	
-	<input type="button" value="retrive one element from queue and transfer to redis"
+	<input type="button" value="transfer one to redis"
 		onclick="window.location='rabbit/transfer'" />
+	<input type="button" value="purge"
+		onclick="window.location='rabbit/purge'" />
+	<input type="checkbox" name="DevNull" value="DevNull" ${state} onclick="window.location='rabbit/nulldev'" /> DevNull
 	<br />
 	<a href="/">home</a>
 </body>

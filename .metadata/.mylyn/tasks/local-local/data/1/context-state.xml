@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContextState>
+<org.eclipse.mylyn.context.ui.editors>
+<MonitoredWindowOpenEditors class="org.eclipse.ui.internal.WorkbenchWindow" isActive="true" isLaunching="true" number="0">
+<editor id="org.eclipse.jdt.ui.ClassFileEditorNoSource" name="RabbitTemplate.class" partName="RabbitTemplate.class" title="RabbitTemplate.class" tooltip="org.springframework.amqp.rabbit.core.RabbitTemplate">
+<input factoryID="org.eclipse.jdt.ui.ClassFileEditorInputFactory" org.eclipse.jdt.ui.ClassFileIdentifier="=cloudDemo/C:\/Users\/john\/.m2\/repository\/org\/springframework\/amqp\/spring-rabbit\/1.3.6.RELEASE\/spring-rabbit-1.3.6.RELEASE.jar&lt;org.springframework.amqp.rabbit.core(RabbitTemplate.class"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="10345" selectionTopPixel="3375"/>
+</editor>
+<editor id="org.eclipse.jdt.ui.ClassFileEditorNoSource" name="MessageConverter.class" partName="MessageConverter.class" title="MessageConverter.class" tooltip="org.springframework.amqp.support.converter.MessageConverter">
+<input factoryID="org.eclipse.jdt.ui.ClassFileEditorInputFactory" org.eclipse.jdt.ui.ClassFileIdentifier="=cloudDemo/C:\/Users\/john\/.m2\/repository\/org\/springframework\/amqp\/spring-amqp\/1.3.6.RELEASE\/spring-amqp-1.3.6.RELEASE.jar&lt;org.springframework.amqp.support.converter(MessageConverter.class"/>
+<editorState selectionHorizontalPixel="0" selectionLength="16" selectionOffset="850" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.wst.server.ui.editor" name="Pivotal Cloud Foundry" partName="Pivotal Cloud Foundry" title="Pivotal Cloud Foundry" tooltip="Pivotal Cloud Foundry">
+<input factoryID="org.eclipse.wst.server.ui.editor.input.factory" server-id="Pivotal Cloud Foundry"/>
+</editor>
+<editor id="org.eclipse.mylyn.tasks.ui.editors.task" name="Logger" partName="Logger" title="Logger" tooltip="Logger">
+<input factoryID="org.eclipse.mylyn.tasks.ui.elementFactories.task.editor" taskHandle="local-1"/>
+</editor>
+<editor id="org.eclipse.mylyn.tasks.ui.editors.task" name="to console" partName="to console" title="to console" tooltip="to console">
+<input factoryID="org.eclipse.mylyn.tasks.ui.elementFactories.task.editor" taskHandle="local-2"/>
+</editor>
+<editor id="org.eclipse.mylyn.tasks.ui.editors.task" name="to RabbitMQ" partName="to RabbitMQ" title="to RabbitMQ" tooltip="to RabbitMQ">
+<input factoryID="org.eclipse.mylyn.tasks.ui.elementFactories.task.editor" taskHandle="local-3"/>
+</editor>
+<editor id="org.eclipse.mylyn.tasks.ui.editors.task" name="New Task" partName="New Task" title="New Task" tooltip="New Task">
+<input factoryID="org.eclipse.mylyn.tasks.ui.elementFactories.task.editor" taskHandle="local-4"/>
+</editor>
+</MonitoredWindowOpenEditors>
+</org.eclipse.mylyn.context.ui.editors>
+</ContextState>

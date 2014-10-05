@@ -1,5 +1,8 @@
 package hu.evosoft.model;
 
+import java.util.Comparator;
+import java.util.UUID;
+
 public class DestinationHost extends AbstractMongoModel {
 	
 	/**
@@ -33,7 +36,10 @@ public class DestinationHost extends AbstractMongoModel {
 	
 	@Override
 	public int hashCode() {
-		return name.hashCode();
+		if (name != null) {
+			return name.hashCode();		
+		}
+		return this.getClass().hashCode();
 	}
 	
 	@Override
@@ -41,4 +47,29 @@ public class DestinationHost extends AbstractMongoModel {
 		return this.getName().equals(((DestinationHost) destHost).getName());
 	}
 	
+	public static Comparator<DestinationHost> MongoModelComparator = new Comparator<DestinationHost>() {
+
+		public int compare(DestinationHost model1, DestinationHost model2) {
+
+			String name1 = model1.getName().toUpperCase();
+			String name2 = model2.getName().toUpperCase();
+
+			// ascending order
+			return name1.compareTo(name2);
+
+		}
+
+	};
+
+	@Override
+	public void exchangeInnerItems() {
+		this.name = getId();
+		setId(UUID.randomUUID().toString());
+	}
+
+	@Override
+	public String mapper() {
+		return "classpath:js/mapDestinationHost.js";
+	}
+
 }

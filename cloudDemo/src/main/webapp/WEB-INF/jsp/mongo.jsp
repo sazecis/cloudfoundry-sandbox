@@ -11,7 +11,6 @@
 	</form>
 	<br/>
     <input type="button" value="clear all" onclick="window.location='mongo/clear'"/>
-    <input type="button" value="aggregate" onclick="window.location='mongo/aggregate'"/>
     <br/>    
 	<a href="/">home</a>
 	<br/>
@@ -22,23 +21,30 @@
 		<c:forEach var="data" items="${dataList}">
 			<tr>
 				<td>${data.data}</td>
-				<!-- td><input type="button" value="delete"
-					onclick="window.location='mongo/delete?id=${data.id}'" /></td-->
 			</tr>
 		</c:forEach>
 	</table>
 	<br />
 
-	<h4>Destination hosts</h4>
+	<h4>Collected according to destination hosts</h4>
 	<br/>
 	<table border="1">
 		<c:forEach var="destHost" items="${destHostList}">
 			<tr>
-				<td>${destHost.id}</td>
 				<td>${destHost.name}</td>
 				<td>${destHost.value}</td>
-				<!-- td><input type="button" value="delete"
-					onclick="window.location='mongo/delete?id=${destHost.id}'" /></td-->
+			</tr>
+		</c:forEach>
+	</table>
+	<br />
+
+	<h4>Collected according to log entry time stamps</h4>
+	<br/>  
+	<table border="1">
+		<c:forEach var="logDate" items="${logDataList}">
+			<tr>
+				<td>${logDate.timeStampAsString}</td>
+				<td>${logDate.value}</td>
 			</tr>
 		</c:forEach>
 	</table>

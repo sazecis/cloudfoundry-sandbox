@@ -43,7 +43,7 @@ public class ReadLogsController {
 			try (BufferedReader reader = new BufferedReader(
 					new InputStreamReader(logFile.getInputStream()))) {
 				Iterator<String> iter = reader.lines().iterator();
-				rabbitService.SendBeginSignal();				
+				rabbitService.sendBeginSignal();				
 				while (iter.hasNext()) {
 					rabbitService.queueMessage(new NetStatsParser().correctLine(iter.next()));
 				}
@@ -52,7 +52,7 @@ public class ReadLogsController {
 				myContent = x.getMessage();
 			}
 			finally {
-				rabbitService.SendEndSignal();
+				rabbitService.sendEndSignal();
 			}
 		} else {
 			myContent = "file is empty";
