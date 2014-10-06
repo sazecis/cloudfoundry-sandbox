@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContextState>
+<org.eclipse.mylyn.context.ui.editors>
+<MonitoredWindowOpenEditors class="org.eclipse.ui.internal.WorkbenchWindow" isActive="true" isLaunching="true" number="0">
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="CloudRabbitListener.java" partName="CloudRabbitListener.java" title="CloudRabbitListener.java" tooltip="cloudDemo/src/main/java/hu/evosoft/service/CloudRabbitListener.java">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/cloudDemo/src/main/java/hu/evosoft/service/CloudRabbitListener.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1073" selectionTopPixel="109"/>
+</editor>
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="NetStatsParser.java" partName="NetStatsParser.java" title="NetStatsParser.java" tooltip="cloudDemo/src/main/java/hu/evosoft/parser/NetStatsParser.java">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/cloudDemo/src/main/java/hu/evosoft/parser/NetStatsParser.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="18" selectionOffset="2337" selectionTopPixel="1020"/>
+</editor>
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="InvalidNetStatLineException.java" partName="InvalidNetStatLineException.java" title="InvalidNetStatLineException.java" tooltip="cloudDemo/src/main/java/hu/evosoft/parser/InvalidNetStatLineException.java">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/cloudDemo/src/main/java/hu/evosoft/parser/InvalidNetStatLineException.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="27" selectionOffset="43" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Executer.java" partName="Executer.java" title="Executer.java" tooltip="NetStatsInputFormatter/src/hu/evosoft/parser/Executer.java">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/NetStatsInputFormatter/src/hu/evosoft/parser/Executer.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="120" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.jdt.ui.ClassFileEditorNoSource" name="Exception.class" partName="Exception.class" title="Exception.class" tooltip="java.lang.Exception">
+<input factoryID="org.eclipse.jdt.ui.ClassFileEditorInputFactory" org.eclipse.jdt.ui.ClassFileIdentifier="=cloudDemo/C:\/Program Files\/Java\/jre1.8.0_20\/lib\/rt.jar&lt;java.lang(Exception.class"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="0" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="CloudRedisService.java" partName="CloudRedisService.java" title="CloudRedisService.java" tooltip="cloudDemo/src/main/java/hu/evosoft/service/CloudRedisService.java">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/cloudDemo/src/main/java/hu/evosoft/service/CloudRedisService.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="14" selectionOffset="1746" selectionTopPixel="354"/>
+</editor>
+</MonitoredWindowOpenEditors>
+</org.eclipse.mylyn.context.ui.editors>
+</ContextState>

@@ -18,6 +18,8 @@ public class NetStatsParser {
 	private static final short TIMESTAMP_INDEX = 0;
 	private static final short DEST_HOST_INDEX = 4;
 	private static final long TEN_MINUTES_IN_MILIS = 600000;
+	private static final String SPLITTER = ";";
+	
 	
 	public void formatFile(Path in, Path out) {
 		try (BufferedWriter writer = Files.newBufferedWriter(out)) {
@@ -70,19 +72,27 @@ public class NetStatsParser {
 	}
 
 	public static boolean isNetStatLog(String line) {
-		return line.split(";").length > 4 ? true : false; 
+		return line.split(SPLITTER).length > 4 ? true : false; 
 	}
 	
-	public static String getDestinationHost(String line) {
-		return line.split(";")[DEST_HOST_INDEX];
+	public static String getDestinationHost(String[] line) throws InvalidNetStatLineException {
+		try {
+			return line[DEST_HOST_INDEX];
+		}
+		catch (ArrayIndexOutOfBoundsException x) {
+			throw new InvalidNetStatLineException(String.format("Cannot get DestinationHost from line \"%s\"", line.toString()));
+		}
 	}
 	
-	public static Long getTimeStamp(String line) {
-		String date = line.split(";")[TIMESTAMP_INDEX];
-		if (isValidDateFormat(date)){
+	public static Long getTimeStamp(String[] line) throws InvalidNetStatLineException {
+		String date = null;
+		try {
+			date = line[TIMESTAMP_INDEX];
 			return convertToTenMinutesInterval(Timestamp.valueOf(date)).getTime();
 		}
-		return null;
+		catch (Exception x) {
+			throw new InvalidNetStatLineException(String.format("Cannot get Timestamp from line \"%s\"", line.toString()));
+		}
 	}
 	
 	private static Timestamp convertToTenMinutesInterval(Timestamp timestamp) {
@@ -102,5 +112,9 @@ public class NetStatsParser {
 		catch (Exception ex) {
 			return false;
 		}
+	}
+
+	public static String[] splitLine(String message) {		
+		return message.split(SPLITTER);
 	}
 }

@@ -1,13 +1,11 @@
 package hu.evosoft.service;
 
 import hu.evosoft.logger.MyLogger;
-import hu.evosoft.model.Data;
 import hu.evosoft.model.DestinationHost;
 import hu.evosoft.model.IMongoModel;
 import hu.evosoft.model.LogEntryDate;
 import hu.evosoft.parser.NetStatsParser;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -27,7 +25,6 @@ public class CloudRedisService {
     @Autowired 
     private RedisTemplate<String, String> redisTemplate;
     
-    private static final String SIMPLE_KEY = "myData";
     private static final String MY_KEYS = "MY_KEYS";
     
     private static final String INC_STEP = "1";  
@@ -41,33 +38,36 @@ public class CloudRedisService {
     @Resource(name="redisTemplate")
     private ValueOperations<String, String> valOps;
     
-    public void addData(String name) {
-    	listOps.rightPush(SIMPLE_KEY, name);
-    }
-
-    public List<String> listData() {
-    	return listOps.range(SIMPLE_KEY, 0, listOps.size(SIMPLE_KEY));
-    }
-
-    public Data getData() {
-    	Data data = new Data();
-    	data.setData(listOps.leftPop(SIMPLE_KEY));
-    	return data;		
-    }
-
-    public void addNetStatInfo(Long key) {    	
-    	if (key != null) {
-    		addNetStatInfo(Long.toString(key));
+    /*private static StopWatch stopWatchK = new StopWatch();
+    private static StopWatch stopWatchV = new StopWatch();
+    */
+    public void addNetStatInfo(String... keys) {    	
+    	//stopWatchK.start();
+		setOps.add(MY_KEYS, keys);
+    	//asyncSaveKey(keys);
+		//stopWatchK.stop();
+		//stopWatchV.start();
+    	for (String key : keys) {
+    		listOps.rightPush(key, INC_STEP);
     	}
+    	//stopWatchV.stop();
     }
 
-    public void addNetStatInfo(String key) {
-    	if (!redisTemplate.hasKey(key)) {
-    		setOps.add(MY_KEYS, key);
-    	} 
-		listOps.rightPush(key, INC_STEP);
-    }
+    
+    /*private void asyncSaveKey(final String... keys){ 
+        Runnable task = new Runnable() {
 
+            @Override 
+            public void run() { 
+                try { 
+                	setOps.add(MY_KEYS, keys);
+                } catch (Exception ex) { 
+                    MyLogger.appendLog(ex.getMessage(), ex.getStackTrace()); 
+                } 
+            } 
+        }; 
+        new Thread(task, "ServiceThread").start(); 
+    }*/
     public List<String> listNetStatInfo() {
     	MyLogger.appendLog(MY_KEYS + ": " + setOps.members(MY_KEYS).toString());
     	List<String> list = new ArrayList<String>();
@@ -78,6 +78,8 @@ public class CloudRedisService {
     }
     
     public List<IMongoModel> popAllMongoCompatibleValues() {
+    	//MyLogger.appendLog("stopWatchK ", Long.toString(stopWatchK.getTotalTimeMillis()));
+    	//MyLogger.appendLog("stopWatchV ", Long.toString(stopWatchV.getTotalTimeMillis()));
     	List<IMongoModel> list = new ArrayList<IMongoModel>();
     	for (String key : getKeys()) {
         	MyLogger.appendLog(String.format("popAllDestinationHosts %s is a date in milis = %s", 
@@ -107,6 +109,5 @@ public class CloudRedisService {
     		redisTemplate.delete(key);
     	}
 		redisTemplate.delete(MY_KEYS);
-    	redisTemplate.delete(SIMPLE_KEY);
     }
 }

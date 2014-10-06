@@ -23,6 +23,7 @@ import org.springframework.web.servlet.view.RedirectView;
 public class ReadLogsController {
 
 	private static String myContent;
+	private static final int CHUNK_LIMIT = 100000;
 
 	@Autowired
 	@Qualifier("cloudRabbitService")
@@ -42,12 +43,18 @@ public class ReadLogsController {
 		if (!logFile.isEmpty()) {
 			try (BufferedReader reader = new BufferedReader(
 					new InputStreamReader(logFile.getInputStream()))) {
-				Iterator<String> iter = reader.lines().iterator();
-				rabbitService.sendBeginSignal();				
-				while (iter.hasNext()) {
-					rabbitService.queueMessage(new NetStatsParser().correctLine(iter.next()));
+				//Iterator<String> iter = reader.lines().iterator();
+				rabbitService.sendBeginSignal();
+				int counter = 0;
+				//while (iter.hasNext()) {
+				String line = null;
+				while ((line = reader.readLine()) != null) {
+					rabbitService.queueMessage(new NetStatsParser().correctLine(line));
+					if (counter++ == CHUNK_LIMIT) {
+						rabbitService.sendChunkEndSignal();
+					}
 				}
-				myContent = "success";
+				myContent = "Successfully uploaded";
 			} catch (IOException x) {
 				myContent = x.getMessage();
 			}
@@ -55,7 +62,7 @@ public class ReadLogsController {
 				rabbitService.sendEndSignal();
 			}
 		} else {
-			myContent = "file is empty";
+			myContent = "The file is empty or no file was provided.";
 		}
 		return new RedirectView("/read_logs");
 	}

@@ -1,6 +1,5 @@
 package hu.evosoft.service;
 
-import hu.evosoft.model.Data;
 import hu.evosoft.rabbit.Signal;
 import hu.evosoft.rabbit.SignalType;
 
@@ -28,10 +27,6 @@ public class CloudRabbitService {
         rabbitTemplate.convertAndSend(QUEUE_NAME, name);
     }
 	
-    public Data retrieveOneData() {
-    	return new Data((String) rabbitTemplate.receiveAndConvert(QUEUE_NAME));    		
-    }
-
 	public void sendBeginSignal() {
         rabbitTemplate.convertAndSend(QUEUE_NAME, new Signal(SignalType.BEGIN));
 	}
@@ -40,6 +35,10 @@ public class CloudRabbitService {
         rabbitTemplate.convertAndSend(QUEUE_NAME, new Signal(SignalType.END));		
 	}
 	
+	public void sendChunkEndSignal() {
+        rabbitTemplate.convertAndSend(QUEUE_NAME, new Signal(SignalType.CHUNK));		
+	}
+
 	public void purgeQueue()
 	{
 		rabbitAdmin.purgeQueue(QUEUE_NAME, false);

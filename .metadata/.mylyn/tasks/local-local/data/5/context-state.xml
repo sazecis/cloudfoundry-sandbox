@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContextState>
+<org.eclipse.mylyn.context.ui.editors>
+<MonitoredWindowOpenEditors class="org.eclipse.ui.internal.WorkbenchWindow" isActive="true" isLaunching="true" number="0">
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="CloudRabbitListener.java" partName="CloudRabbitListener.java" title="CloudRabbitListener.java" tooltip="cloudDemo/src/main/java/hu/evosoft/service/CloudRabbitListener.java">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/cloudDemo/src/main/java/hu/evosoft/service/CloudRabbitListener.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="872" selectionTopPixel="132"/>
+</editor>
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="CloudRedisService.java" partName="CloudRedisService.java" title="CloudRedisService.java" tooltip="cloudDemo/src/main/java/hu/evosoft/service/CloudRedisService.java">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/cloudDemo/src/main/java/hu/evosoft/service/CloudRedisService.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1596" selectionTopPixel="0"/>
+</editor>
+<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="NetStatsParser.java" partName="NetStatsParser.java" title="NetStatsParser.java" tooltip="cloudDemo/src/main/java/hu/evosoft/parser/NetStatsParser.java">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/cloudDemo/src/main/java/hu/evosoft/parser/NetStatsParser.java"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="1367" selectionTopPixel="330"/>
+</editor>
+<editor/>
+</MonitoredWindowOpenEditors>
+</org.eclipse.mylyn.context.ui.editors>
+</ContextState>

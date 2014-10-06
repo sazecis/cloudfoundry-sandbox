@@ -1,0 +1,9 @@
+applications:
+- name: cloud-demo-eotest
+  memory: 512M
+  host: cloud-demo-eotest
+  domain: cfapps.io
+  env: {
+    }
+  services: {
+    }

@@ -1,6 +1,7 @@
 package hu.evosoft.service;
 
 import hu.evosoft.logger.MyLogger;
+import hu.evosoft.parser.InvalidNetStatLineException;
 import hu.evosoft.parser.NetStatsParser;
 import hu.evosoft.rabbit.Signal;
 import hu.evosoft.rabbit.SignalType;
@@ -29,18 +30,23 @@ public class CloudRabbitListener {
 	}
 
 	public void listenForStrings(String message) {
-		if (NetStatsParser.isNetStatLog(message)) {
-			redisService.addNetStatInfo(NetStatsParser.getDestinationHost(message));
-			redisService.addNetStatInfo(NetStatsParser.getTimeStamp(message));
+		if (isDevNullSet) {
+			return;
 		}
-		else {
-			redisService.addData(message);
-		}		
+		try {
+			String[] parts = NetStatsParser.splitLine(message);
+			redisService.addNetStatInfo(NetStatsParser.getDestinationHost(parts), 
+					Long.toString(NetStatsParser.getTimeStamp(parts)));
+		}
+		catch (InvalidNetStatLineException x) {
+			MyLogger.appendLog(x.getMessage(), x.getStackTrace());
+		}
 	}
 	
 	public void listenForSignal(Signal signal) {
 		MyLogger.appendLog("Signal listener: ", signal.toString());
-		if (signal != null && signal.getType().equals(SignalType.END) && !isDevNullSet) {
+		if (signal != null && !isDevNullSet &&  
+				(signal.getType().equals(SignalType.END) || signal.getType().equals(SignalType.CHUNK))) {
 			try {
 				redisMongoTransferrer.transferAll();
 			} 

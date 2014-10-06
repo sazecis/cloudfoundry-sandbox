@@ -20,10 +20,6 @@ public class RedisMongoTransferrer {
 	@Qualifier("cloudRedisService")
 	private CloudRedisService redisService;
 	
-    public void transferData() {
-    	mongoService.addDocument(redisService.getData());
-    }
-    
     public void transferAll() {
     	for (IMongoModel model : redisService.popAllMongoCompatibleValues()) {
     		MyLogger.appendLog("transfer ", RedisMongoTransferrer.class.getSimpleName(), model.toString());
