@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 public class CloudRabbitListener {
 
-	private static boolean isDevNullSet = false;
+	private static boolean isDevNullSet = false;	
 	
 	@Autowired
 	@Qualifier("cloudRedisService")
@@ -20,17 +20,25 @@ public class CloudRabbitListener {
 	@Autowired
 	private RedisMongoTransferrer redisMongoTransferrer;
 
-	public void listen(String message) {
+	public void listen(Object message) {
+		if (message instanceof String) {
+			listenForStrings((String) message);
+		} else if (message instanceof Signal) {
+			listenForSignal((Signal) message);
+		}
+	}
+
+	public void listenForStrings(String message) {
 		if (NetStatsParser.isNetStatLog(message)) {
 			redisService.addNetStatInfo(NetStatsParser.getDestinationHost(message));
 			redisService.addNetStatInfo(NetStatsParser.getTimeStamp(message));
 		}
 		else {
 			redisService.addData(message);
-		}
+		}		
 	}
-
-	public void listen(Signal signal) {
+	
+	public void listenForSignal(Signal signal) {
 		MyLogger.appendLog("Signal listener: ", signal.toString());
 		if (signal != null && signal.getType().equals(SignalType.END) && !isDevNullSet) {
 			try {

@@ -5,6 +5,9 @@ import hu.evosoft.model.DestinationHost;
 import hu.evosoft.model.LogEntryDate;
 import hu.evosoft.service.CloudMongoService;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -26,8 +29,12 @@ public class CloudMongoController {
 	@RequestMapping(value = "/mongo", method = RequestMethod.GET)
 	public String getDocumentList(ModelMap model) {
 		model.addAttribute("dataList", mongoService.listDocuments(Data.class));
-		model.addAttribute("destHostList", mongoService.listDocuments(DestinationHost.class));
-		model.addAttribute("logDataList", mongoService.listDocuments(LogEntryDate.class));
+		List<DestinationHost> destHostList = mongoService.listDocuments(DestinationHost.class);
+		Collections.sort(destHostList);
+		model.addAttribute("destHostList", destHostList);
+		List<LogEntryDate> logEntryList = mongoService.listDocuments(LogEntryDate.class);
+		Collections.sort(logEntryList);
+		model.addAttribute("logDataList", logEntryList);
 		return "mongo";
 	}
 
