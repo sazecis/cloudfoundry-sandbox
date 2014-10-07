@@ -1,7 +1,7 @@
 package hu.evosoft.controller;
 
 import hu.evosoft.service.CloudRedisService;
-import hu.evosoft.transfer.RedisMongoTransferrer;
+import hu.evosoft.service.RedisMongoTransferrer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

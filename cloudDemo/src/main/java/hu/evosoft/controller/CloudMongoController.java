@@ -1,5 +1,7 @@
 package hu.evosoft.controller;
 
+import hu.evosoft.logger.CounterCategory;
+import hu.evosoft.logger.PerformanceCounter;
 import hu.evosoft.model.DestinationHost;
 import hu.evosoft.model.LogEntryDate;
 import hu.evosoft.service.CloudMongoService;
@@ -31,6 +33,10 @@ public class CloudMongoController {
 		List<LogEntryDate> logEntryList = mongoService.listDocuments(LogEntryDate.class);
 		Collections.sort(logEntryList);
 		model.addAttribute("logDataList", logEntryList);
+		model.addAttribute("perfCountRabbitSend", PerformanceCounter.getGlobalTimeSpentFor(CounterCategory.RABBIT_SEND));
+		model.addAttribute("perfCountRabbitReceive", PerformanceCounter.getGlobalTimeSpentFor(CounterCategory.RABBIT_RECEIVE));
+		model.addAttribute("perfCountMongoAdd", PerformanceCounter.getGlobalTimeSpentFor(CounterCategory.MONGO_ADD));
+		model.addAttribute("perfCountMongoMr", PerformanceCounter.getGlobalTimeSpentFor(CounterCategory.MONGO_MR));
 		return "mongo";
 	}
 

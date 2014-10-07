@@ -1,11 +1,14 @@
 package hu.evosoft.service;
 
+import hu.evosoft.logger.CounterCategory;
+import hu.evosoft.logger.CounterId;
+import hu.evosoft.logger.CounterType;
 import hu.evosoft.logger.MyLogger;
+import hu.evosoft.logger.PerformanceCounter;
 import hu.evosoft.parser.InvalidNetStatLineException;
 import hu.evosoft.parser.NetStatsParser;
 import hu.evosoft.rabbit.Signal;
 import hu.evosoft.rabbit.SignalType;
-import hu.evosoft.transfer.RedisMongoTransferrer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,13 +26,13 @@ public class CloudRabbitListener {
 
 	public void listen(Object message) {
 		if (message instanceof String) {
-			listenForStrings((String) message);
+			receiveStrings((String) message);
 		} else if (message instanceof Signal) {
-			listenForSignal((Signal) message);
-		}
+			receiveSignal((Signal) message);
+		} 
 	}
 
-	public void listenForStrings(String message) {
+	public void receiveStrings(String message) {
 		if (isDevNullSet) {
 			return;
 		}
@@ -43,8 +46,20 @@ public class CloudRabbitListener {
 		}
 	}
 	
-	public void listenForSignal(Signal signal) {
+	public void receiveSignal(Signal signal) {
 		MyLogger.appendLog("Signal listener: ", signal.toString());
+		switch (signal.getType().name()) {
+			case "START" : {
+				PerformanceCounter.addNewCounterEntry(
+						new CounterId(CounterCategory.RABBIT_RECEIVE, CounterType.START, this.getClass().getSimpleName()), 
+						System.currentTimeMillis());
+			}
+			case "END" : {
+				PerformanceCounter.addNewCounterEntry(
+						new CounterId(CounterCategory.RABBIT_RECEIVE, CounterType.END, this.getClass().getSimpleName()), 
+						System.currentTimeMillis());				
+			}
+		}
 		if (signal != null && !isDevNullSet &&  
 				(signal.getType().equals(SignalType.END) || signal.getType().equals(SignalType.CHUNK))) {
 			try {

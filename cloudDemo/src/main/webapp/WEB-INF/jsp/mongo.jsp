@@ -7,7 +7,15 @@
     <br/>    
 	<a href="/">home</a>
 	<br/>
-
+	Time spent for:
+	<table>
+		<tr>
+			<td>Rabbit send: ${perfCountRabbitSend}</td>
+			<td>Rabbit receive: ${perfCountRabbitReceive}</td>
+			<td>Mongo add: ${perfCountMongoAdd}</td>
+			<td>Mongo MapReduce: ${perfCountMongoMr}</td>
+		</tr>
+	</table>
 	<h4>Collected according to destination hosts</h4>
 	<br/>
 	<table border="1">

@@ -10,7 +10,7 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
-public class MyLogsController {
+public class MyLoggerController {
 
 	@RequestMapping(value = "/logs", method = RequestMethod.GET)
 	public String getLogs(ModelMap model) {
