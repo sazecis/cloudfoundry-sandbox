@@ -11,23 +11,23 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class PerformanceCounter {
-
+	
 	@Autowired
-	@Qualifier("rabbitPerfCountTemplate")
-	private static RabbitTemplate rabbitPerfCountTemplate;
+	private RabbitTemplate rabbitTemplate;
 	@Autowired
-	private static MongoTemplate mongoTemplate;
+	private MongoTemplate mongoTemplate;
 	
 	private static Map<CounterId, Long> counters = new HashMap<>();
 
 	private static final String QUEUE_NAME = "perfCounter";
 	
 	public static void addNewCounterEntry(CounterId id, long timeStamp) {
-		rabbitPerfCountTemplate.convertAndSend(QUEUE_NAME, new CounterEntity(id, timeStamp));
+		new PerformanceCounter().rabbitTemplate.toString();
+		new PerformanceCounter().rabbitTemplate.convertAndSend(QUEUE_NAME, new CounterEntity(id, timeStamp));
 		counters.put(id, timeStamp);
 	}
 	
-	public static long getGlobalTimeSpentFor(CounterCategory category) {
+	public static long getLocalTimeSpentFor(CounterCategory category) {
 		long timeStart = -1; 
 		long timeEnd = -1;
 		
@@ -45,10 +45,11 @@ public class PerformanceCounter {
 		return -1;
 	} 
 
-	public static long getLocalTimeSpentFor(CounterCategory category) {
+	public static long getGlobalTimeSpentFor(CounterCategory category) {
 		long timeStart = Long.MAX_VALUE; 
 		long timeEnd = -1;
-		for (CounterEntity entity : mongoTemplate.findAll(CounterEntity.class)) {
+		PerformanceCounter counter = new PerformanceCounter();
+		for (CounterEntity entity : counter.mongoTemplate.findAll(CounterEntity.class)) {
 			CounterId id = entity.getId();
 			if (id.getCategory().equals(category)) {
 				switch (id.getType().name()) {
