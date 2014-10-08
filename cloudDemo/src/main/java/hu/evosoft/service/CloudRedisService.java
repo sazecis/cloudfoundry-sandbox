@@ -38,38 +38,15 @@ public class CloudRedisService {
     @Resource(name="redisTemplate")
     private ValueOperations<String, String> valOps;
     
-    /*private static StopWatch stopWatchK = new StopWatch();
-    private static StopWatch stopWatchV = new StopWatch();
-    */
     public void addNetStatInfo(String... keys) {    	
-    	//stopWatchK.start();
 		setOps.add(MY_KEYS, keys);
-    	//asyncSaveKey(keys);
-		//stopWatchK.stop();
-		//stopWatchV.start();
     	for (String key : keys) {
     		listOps.rightPush(key, INC_STEP);
     	}
-    	//stopWatchV.stop();
     }
 
-    
-    /*private void asyncSaveKey(final String... keys){ 
-        Runnable task = new Runnable() {
-
-            @Override 
-            public void run() { 
-                try { 
-                	setOps.add(MY_KEYS, keys);
-                } catch (Exception ex) { 
-                    MyLogger.appendLog(ex.getMessage(), ex.getStackTrace()); 
-                } 
-            } 
-        }; 
-        new Thread(task, "ServiceThread").start(); 
-    }*/
     public List<String> listNetStatInfo() {
-    	MyLogger.appendLog(MY_KEYS + ": " + setOps.members(MY_KEYS).toString());
+    	MyLogger.appendLog("{0}: {1}", MY_KEYS, setOps.members(MY_KEYS));
     	List<String> list = new ArrayList<String>();
     	for (String key : getKeys()) {
     		list.add(String.format("%s %s", key, listOps.range(key, 0, listOps.size(key))));
@@ -78,12 +55,10 @@ public class CloudRedisService {
     }
     
     public List<IMongoModel> popAllMongoCompatibleValues() {
-    	//MyLogger.appendLog("stopWatchK ", Long.toString(stopWatchK.getTotalTimeMillis()));
-    	//MyLogger.appendLog("stopWatchV ", Long.toString(stopWatchV.getTotalTimeMillis()));
     	List<IMongoModel> list = new ArrayList<IMongoModel>();
     	for (String key : getKeys()) {
-        	MyLogger.appendLog(String.format("popAllDestinationHosts %s is a date in milis = %s", 
-        			key, NetStatsParser.isDateInMilisecond(key)));
+        	MyLogger.appendLog("popAllDestinationHosts {0} is a date in milis = {1}", 
+        			key, NetStatsParser.isDateInMilisecond(key));
     		if (NetStatsParser.isDateInMilisecond(key)) {
         		list.add(new LogEntryDate(Long.parseLong(key), listOps.size(key).intValue()));    			    			
     		} 

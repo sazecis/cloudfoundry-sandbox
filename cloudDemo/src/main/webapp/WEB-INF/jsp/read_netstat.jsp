@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <body>
-	<h2>Process log files</h2>
+	<h2>Process Net Statistics files</h2>
 	<br />
 	<a href="/">home</a>
 	<br /><br />

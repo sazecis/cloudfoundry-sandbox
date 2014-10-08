@@ -1,10 +1,9 @@
 package hu.evosoft.service;
 
 import hu.evosoft.logger.CounterCategory;
-import hu.evosoft.logger.CounterId;
+import hu.evosoft.logger.CounterEntity;
 import hu.evosoft.logger.CounterType;
 import hu.evosoft.logger.MyLogger;
-import hu.evosoft.logger.PerformanceCounter;
 import hu.evosoft.parser.InvalidNetStatLineException;
 import hu.evosoft.parser.NetStatsParser;
 import hu.evosoft.rabbit.Signal;
@@ -20,6 +19,11 @@ public class CloudRabbitListener {
 	@Autowired
 	@Qualifier("cloudRedisService")
 	private CloudRedisService redisService;
+	@Autowired
+	@Qualifier("cloudMongoService")
+	private CloudMongoService mongoService;
+	@Autowired
+	private PerformanceCounterService performanceCounterService;
 
 	@Autowired
 	private RedisMongoTransferrer redisMongoTransferrer;
@@ -29,7 +33,7 @@ public class CloudRabbitListener {
 			receiveStrings((String) message);
 		} else if (message instanceof Signal) {
 			receiveSignal((Signal) message);
-		} 
+		}
 	}
 
 	public void receiveStrings(String message) {
@@ -49,15 +53,19 @@ public class CloudRabbitListener {
 	public void receiveSignal(Signal signal) {
 		MyLogger.appendLog("Signal listener: ", signal.toString());
 		switch (signal.getType().name()) {
-			case "START" : {
-				PerformanceCounter.addNewCounterEntry(
-						new CounterId(CounterCategory.RABBIT_RECEIVE, CounterType.START, this.getClass().getSimpleName()), 
+			case "BEGIN" : {
+				performanceCounterService.addNewCounterEntry(
+						CounterCategory.RABBIT_RECEIVE, CounterType.START, 
+						this.getClass().getSimpleName(), 
 						System.currentTimeMillis());
+				break;
 			}
 			case "END" : {
-				PerformanceCounter.addNewCounterEntry(
-						new CounterId(CounterCategory.RABBIT_RECEIVE, CounterType.END, this.getClass().getSimpleName()), 
-						System.currentTimeMillis());				
+				performanceCounterService.addNewCounterEntry(
+						CounterCategory.RABBIT_RECEIVE, CounterType.END, 
+						this.getClass().getSimpleName(), 
+						System.currentTimeMillis());
+				break;
 			}
 		}
 		if (signal != null && !isDevNullSet &&  
@@ -76,5 +84,10 @@ public class CloudRabbitListener {
 		isDevNullSet = !isDevNullSet;
 		return isDevNullSet ? "checked" : "";
 	}
+	
+	public void listenCounter(CounterEntity entity) {
+		MyLogger.appendLog("listenCounter {0}", entity);
+		mongoService.addCounter(entity);
+	}	
 	
 }

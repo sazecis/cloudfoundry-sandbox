@@ -1,10 +1,11 @@
 package hu.evosoft.controller;
 
 import hu.evosoft.logger.CounterCategory;
-import hu.evosoft.logger.PerformanceCounter;
+import hu.evosoft.logger.CounterEntity;
 import hu.evosoft.model.DestinationHost;
 import hu.evosoft.model.LogEntryDate;
 import hu.evosoft.service.CloudMongoService;
+import hu.evosoft.service.PerformanceCounterService;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,6 +25,8 @@ public class CloudMongoController {
 	@Autowired
 	@Qualifier("cloudMongoService")
 	private CloudMongoService mongoService;
+	@Autowired
+	private PerformanceCounterService performanceCounterService;
 	
 	@RequestMapping(value = "/mongo", method = RequestMethod.GET)
 	public String getDocumentList(ModelMap model) {
@@ -33,16 +36,26 @@ public class CloudMongoController {
 		List<LogEntryDate> logEntryList = mongoService.listDocuments(LogEntryDate.class);
 		Collections.sort(logEntryList);
 		model.addAttribute("logDataList", logEntryList);
-		model.addAttribute("perfCountRabbitSend", PerformanceCounter.getGlobalTimeSpentFor(CounterCategory.RABBIT_SEND));
-		model.addAttribute("perfCountRabbitReceive", PerformanceCounter.getGlobalTimeSpentFor(CounterCategory.RABBIT_RECEIVE));
-		model.addAttribute("perfCountMongoAdd", PerformanceCounter.getGlobalTimeSpentFor(CounterCategory.MONGO_ADD));
-		model.addAttribute("perfCountMongoMr", PerformanceCounter.getGlobalTimeSpentFor(CounterCategory.MONGO_MR));
+		model.addAttribute("perfCountRabbitSend", 
+				performanceCounterService.getGlobalTimeSpentFor(CounterCategory.RABBIT_SEND));
+		model.addAttribute("perfCountRabbitReceive", 
+				performanceCounterService.getGlobalTimeSpentFor(CounterCategory.RABBIT_RECEIVE));
+		model.addAttribute("perfCountMongoAdd", 
+				performanceCounterService.getGlobalTimeSpentFor(CounterCategory.MONGO_ADD));
+		model.addAttribute("perfCountMongoMr", 
+				performanceCounterService.getGlobalTimeSpentFor(CounterCategory.MONGO_MR));
 		return "mongo";
 	}
 
 	@RequestMapping(value = "/mongo/clear", method = RequestMethod.GET)
 	public View clearDocuments(ModelMap model) {
 		mongoService.clearAllDocuments();
+		return new RedirectView("/mongo");
+	}
+
+	@RequestMapping(value = "/mongo/clearCounters", method = RequestMethod.GET)
+	public View clearCounters(ModelMap model) {
+		mongoService.clearDocuments(CounterEntity.class);
 		return new RedirectView("/mongo");
 	}
 

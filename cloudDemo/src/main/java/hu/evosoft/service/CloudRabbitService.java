@@ -1,5 +1,6 @@
 package hu.evosoft.service;
 
+import hu.evosoft.logger.CounterEntity;
 import hu.evosoft.rabbit.Signal;
 import hu.evosoft.rabbit.SignalType;
 
@@ -12,10 +13,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class CloudRabbitService {
 
-	private static final String QUEUE_NAME = "cloudDemo"; 
+	private static final String DEFAULT_QUEUE_NAME = "cloudDemo"; 
 
 	@Autowired 
     private RabbitTemplate rabbitTemplate;
+	@Autowired
+	@Qualifier("rabbitPerfTemplate")
+    private RabbitTemplate rabbitPerfTemplate;
 	@Autowired
 	@Qualifier("rabbitAdmin")
 	private AmqpAdmin rabbitAdmin;
@@ -23,25 +27,33 @@ public class CloudRabbitService {
 	@Qualifier("cloudRedisService")
 	private CloudRedisService redisService;
 	
-    public void queueMessage(String name) {
-        rabbitTemplate.convertAndSend(QUEUE_NAME, name);
+    public void queueMessage(String message) {
+    	queueMessage(DEFAULT_QUEUE_NAME, message);
     }
-	
+
+    public void queueMessage(String queueName, String message) {
+        rabbitTemplate.convertAndSend(queueName, message);
+    }
+
+    public void queueMessage(String queueName, CounterEntity message) {
+    	rabbitPerfTemplate.convertAndSend(queueName, message);
+    }
+
 	public void sendBeginSignal() {
-        rabbitTemplate.convertAndSend(QUEUE_NAME, new Signal(SignalType.BEGIN));
+        rabbitTemplate.convertAndSend(DEFAULT_QUEUE_NAME, new Signal(SignalType.BEGIN));
 	}
 
 	public void sendEndSignal() {
-        rabbitTemplate.convertAndSend(QUEUE_NAME, new Signal(SignalType.END));		
+        rabbitTemplate.convertAndSend(DEFAULT_QUEUE_NAME, new Signal(SignalType.END));		
 	}
 	
 	public void sendChunkEndSignal() {
-        rabbitTemplate.convertAndSend(QUEUE_NAME, new Signal(SignalType.CHUNK));		
+        rabbitTemplate.convertAndSend(DEFAULT_QUEUE_NAME, new Signal(SignalType.CHUNK));		
 	}
 
 	public void purgeQueue()
 	{
-		rabbitAdmin.purgeQueue(QUEUE_NAME, false);
+		rabbitAdmin.purgeQueue(DEFAULT_QUEUE_NAME, false);
 	}
        
 }

@@ -2,12 +2,11 @@ package hu.evosoft.controller;
 
 import hu.evosoft.file.UploadedFile;
 import hu.evosoft.logger.CounterCategory;
-import hu.evosoft.logger.CounterId;
 import hu.evosoft.logger.CounterType;
 import hu.evosoft.logger.MyLogger;
-import hu.evosoft.logger.PerformanceCounter;
 import hu.evosoft.parser.NetStatsParser;
 import hu.evosoft.service.CloudRabbitService;
+import hu.evosoft.service.PerformanceCounterService;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -41,6 +40,8 @@ public class ReadNetStatsController {
 	@Autowired
 	@Qualifier("cloudRabbitService")
 	private CloudRabbitService rabbitService;
+	@Autowired
+	private PerformanceCounterService performanceCounterpervice;
 
 	@RequestMapping(value = "/read_netstat", method = RequestMethod.GET)
 	public String readNetStat(ModelMap model) {
@@ -57,7 +58,7 @@ public class ReadNetStatsController {
 						}
 					});
 		} catch (IOException e) {
-			MyLogger.appendLog(e.getMessage(), e.getStackTrace());			
+			MyLogger.appendLog(e.getMessage());			
 		}
 		model.addAttribute("fileList", myFileSet);
 		return "read_netstat";
@@ -71,9 +72,7 @@ public class ReadNetStatsController {
 			readAndProcessFile(reader);
 		} catch (IOException x) {
 			myContent = x.getMessage();
-		} finally {
-			rabbitService.sendEndSignal();
-		}
+		} 
 		return new RedirectView("/read_netstat");
 	}
 
@@ -128,25 +127,26 @@ public class ReadNetStatsController {
 	}
 
 	private void readAndProcessFile(BufferedReader reader) throws IOException {
-		// Iterator<String> iter = reader.lines().iterator();
-		rabbitService.sendBeginSignal();
-		PerformanceCounter.addNewCounterEntry(
-				new CounterId(CounterCategory.RABBIT_SEND, CounterType.START, this.getClass().getSimpleName()), 
-				System.currentTimeMillis());
 		int counter = 1;
-		// while (iter.hasNext()) {
 		String line = null;
+
+		performanceCounterpervice.clearCounters();
+		rabbitService.sendBeginSignal();	
+		performanceCounterpervice.addNewCounterEntry(
+				CounterCategory.RABBIT_SEND, CounterType.START, 
+				this.getClass().getSimpleName(), 
+				System.currentTimeMillis());		
 		while ((line = reader.readLine()) != null) {
 			rabbitService.queueMessage(new NetStatsParser().correctLine(line));
 			if (counter++ % CHUNK_LIMIT == 0) {
 				rabbitService.sendChunkEndSignal();
 			}
 		}
-		PerformanceCounter.addNewCounterEntry(
-				new CounterId(CounterCategory.RABBIT_SEND, CounterType.END, this.getClass().getSimpleName()), 
+		performanceCounterpervice.addNewCounterEntry(
+				CounterCategory.RABBIT_SEND, CounterType.END, 
+				this.getClass().getSimpleName(), 
 				System.currentTimeMillis());
-		rabbitService.sendEndSignal();
-		myContent = "Successfully processed";
+		rabbitService.sendEndSignal();		
 	}
 
 }

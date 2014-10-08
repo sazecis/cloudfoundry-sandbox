@@ -12,24 +12,35 @@
 
 	<!-- RabbitMq -->
 	<cloud:rabbit-connection-factory id="rabbitConnectionFactory" />
-	<!-- Set up the AmqpTemplate/RabbitTemplate: -->
-	<rabbit:template id="rabbitTemplate"
-		connection-factory="rabbitConnectionFactory"/>
 	<!-- Request that queues, exchanges and bindings be automatically declared 
 		on the broker: -->
 	<rabbit:admin id="rabbitAdmin" connection-factory="rabbitConnectionFactory" />
 	<!-- Declare the "messages" queues: -->
 	<rabbit:queue id="rabbitQueue" name="cloudDemo" durable="false" />
-	<rabbit:queue id="rabbitQueue" name="perfCounter" durable="false" />
+	<rabbit:queue id="rabbitPerfQueue" name="perfCounter" durable="false" />
+
+    <!-- CloudRabbitService/Listener -->
+	<!-- Set up the AmqpTemplate/RabbitTemplate: -->
+	<rabbit:template id="rabbitTemplate"
+		connection-factory="rabbitConnectionFactory" queue="cloudDemo"/>
 	<!-- Rabbit listeners -->
 	<bean id="rabbitListener" class="hu.evosoft.service.CloudRabbitListener" />
-	<bean id="rabbitPerfCountListener" class="hu.evosoft.logger.PerformanceCounter" />
 	<rabbit:listener-container id="rabbitListenerContainer"
 		connection-factory="rabbitConnectionFactory">
 		<rabbit:listener queues="cloudDemo" ref="rabbitListener" method="listen" />
-		<rabbit:listener queues="perfCounter" ref="rabbitPerfCountListener" method="listen" />
 	</rabbit:listener-container>
-	
+
+    <!-- CloudRabbitService/Listener -->
+	<!-- Set up the AmqpTemplate/RabbitTemplate: -->
+	<rabbit:template id="rabbitPerfTemplate"
+		connection-factory="rabbitConnectionFactory" queue="perfCounter"/>
+	<!-- Rabbit listeners -->
+	<bean id="rabbitPerfListener" class="hu.evosoft.service.CloudRabbitListener" />
+	<rabbit:listener-container id="rabbitPerfListenerContainer"
+		connection-factory="rabbitConnectionFactory">
+		<rabbit:listener queues="perfCounter" ref="rabbitPerfListener" method="listenCounter" />
+	</rabbit:listener-container>
+
 	<!-- MongoTemplate -->
 	<cloud:mongo-db-factory id="mongoDbFactory" />
 	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">

@@ -3,17 +3,18 @@
 <body>
 	<h2>MongoDB in CloudFoundary</h2>
 
-    <input type="button" value="clear all" onclick="window.location='mongo/clear'"/>
+    <input type="button" value="Clear tables" onclick="window.location='mongo/clear'"/>
+    <input type="button" value="Clear counters" onclick="window.location='mongo/clearCounters'"/>
     <br/>    
 	<a href="/">home</a>
 	<br/>
 	Time spent for:
-	<table>
+	<table border="1">
 		<tr>
-			<td>Rabbit send: ${perfCountRabbitSend}</td>
-			<td>Rabbit receive: ${perfCountRabbitReceive}</td>
-			<td>Mongo add: ${perfCountMongoAdd}</td>
-			<td>Mongo MapReduce: ${perfCountMongoMr}</td>
+			<td><b>Rabbit send: </b>${perfCountRabbitSend/1000} s</td>
+			<td><b>Rabbit receive and Redis push: </b>${perfCountRabbitReceive/1000} s</td>
+			<td><b>Mongo add: </b>${perfCountMongoAdd} ms</td>
+			<td><b>Mongo mapReduce: </b>${perfCountMongoMr} ms</td>
 		</tr>
 	</table>
 	<h4>Collected according to destination hosts</h4>
