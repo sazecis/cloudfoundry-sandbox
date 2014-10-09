@@ -2,11 +2,16 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:p="http://www.springframework.org/schema/p" xmlns:cloud="http://www.springframework.org/schema/cloud"
-	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit" xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xsi:schemaLocation="http://www.springframework.org/schema/cloud http://www.springframework.org/schema/cloud/spring-cloud-0.1.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
 		http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.3.xsd">
+		
+	<mvc:annotation-driven />
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+	<mvc:resources mapping="/downloadstatistics/**" location="/downloadstatistics/" />
 	
 	<context:component-scan base-package="hu.evosoft" />
 
@@ -17,28 +22,31 @@
 	<rabbit:admin id="rabbitAdmin" connection-factory="rabbitConnectionFactory" />
 	<!-- Declare the "messages" queues: -->
 	<rabbit:queue id="rabbitQueue" name="cloudDemo" durable="false" />
-	<rabbit:queue id="rabbitPerfQueue" name="perfCounter" durable="false" />
+	<rabbit:queue id="rabbitPerfQueue" name="perfCounter"
+		durable="false" />
 
-    <!-- CloudRabbitService/Listener -->
+	<!-- CloudRabbitService/Listener -->
 	<!-- Set up the AmqpTemplate/RabbitTemplate: -->
 	<rabbit:template id="rabbitTemplate"
-		connection-factory="rabbitConnectionFactory" queue="cloudDemo"/>
+		connection-factory="rabbitConnectionFactory" queue="cloudDemo" />
 	<!-- Rabbit listeners -->
 	<bean id="rabbitListener" class="hu.evosoft.service.CloudRabbitListener" />
 	<rabbit:listener-container id="rabbitListenerContainer"
 		connection-factory="rabbitConnectionFactory">
-		<rabbit:listener queues="cloudDemo" ref="rabbitListener" method="listen" />
+		<rabbit:listener queues="cloudDemo" ref="rabbitListener"
+			method="listen" />
 	</rabbit:listener-container>
 
-    <!-- CloudRabbitService/Listener -->
+	<!-- CloudRabbitService/Listener -->
 	<!-- Set up the AmqpTemplate/RabbitTemplate: -->
 	<rabbit:template id="rabbitPerfTemplate"
-		connection-factory="rabbitConnectionFactory" queue="perfCounter"/>
+		connection-factory="rabbitConnectionFactory" queue="perfCounter" />
 	<!-- Rabbit listeners -->
 	<bean id="rabbitPerfListener" class="hu.evosoft.service.CloudRabbitListener" />
 	<rabbit:listener-container id="rabbitPerfListenerContainer"
 		connection-factory="rabbitConnectionFactory">
-		<rabbit:listener queues="perfCounter" ref="rabbitPerfListener" method="listenCounter" />
+		<rabbit:listener queues="perfCounter" ref="rabbitPerfListener"
+			method="listenCounter" />
 	</rabbit:listener-container>
 
 	<!-- MongoTemplate -->
@@ -50,7 +58,7 @@
 	<!-- RedisTemplate -->
 	<cloud:redis-connection-factory id="redisConnectionFactory" />
 	<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate"
-		p:connection-factory-ref="redisConnectionFactory"/>
+		p:connection-factory-ref="redisConnectionFactory" />
 
 	<!-- Use this post processor to translate any MongoExceptions thrown in 
 		@Repository annotated classes -->

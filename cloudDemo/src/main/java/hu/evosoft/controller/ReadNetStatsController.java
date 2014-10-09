@@ -149,4 +149,9 @@ public class ReadNetStatsController {
 		rabbitService.sendEndSignal();		
 	}
 
+	@RequestMapping(value = "/stats", method = RequestMethod.GET)
+	public String gwtStatistics(ModelMap model) {
+		return "stats";
+	}
+
 }
