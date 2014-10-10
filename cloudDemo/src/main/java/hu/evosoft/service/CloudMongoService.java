@@ -73,7 +73,7 @@ public class CloudMongoService {
 				Boolean.toString(mongoTemplate.collectionExists(type)));		
 		for (T result : results) {
 			IMongoModel aggregated = (IMongoModel) result;
-			aggregated.exchangeInnerItems();
+			aggregated.moveIdToContent();
 			MyLogger.appendLog("mongoTemplate.insert", aggregated.toString(), type.getSimpleName());
 			mongoTemplate.insert(aggregated, aggregated.collectionName());
 		}

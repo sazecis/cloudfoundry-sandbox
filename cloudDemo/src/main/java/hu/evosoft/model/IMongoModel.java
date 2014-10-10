@@ -12,7 +12,7 @@ public interface IMongoModel {
 	
 	String collectionName();
 	
-	void exchangeInnerItems();
+	void moveIdToContent();
 	
 	String mapper();
 

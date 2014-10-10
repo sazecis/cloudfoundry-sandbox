@@ -19,7 +19,7 @@
 					<a href="read_netstat">Load and process data ...</a>
 				</td>
 				<td>
-					<a href="stats">Statistics</a>
+					<a href="TODO">Statistics - TODO LINK</a>
 				</td>
 			</tr>
 		</table>

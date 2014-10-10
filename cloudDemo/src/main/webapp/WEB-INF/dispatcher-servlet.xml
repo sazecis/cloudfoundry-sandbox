@@ -11,7 +11,6 @@
 		
 	<mvc:annotation-driven />
 	<mvc:resources mapping="/resources/**" location="/resources/" />
-	<mvc:resources mapping="/downloadstatistics/**" location="/downloadstatistics/" />
 	
 	<context:component-scan base-package="hu.evosoft" />
 
