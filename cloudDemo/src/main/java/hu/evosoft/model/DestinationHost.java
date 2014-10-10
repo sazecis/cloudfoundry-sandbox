@@ -13,7 +13,7 @@ public class DestinationHost extends AbstractMongoModel {
 	private String name;
 
 	public DestinationHost() {
-		
+		this.name = "";
 	}
 	
 	public DestinationHost(String name, int value) {
@@ -36,21 +36,20 @@ public class DestinationHost extends AbstractMongoModel {
 	
 	@Override
 	public int hashCode() {
-		if (name != null) {
-			return name.hashCode();		
-		}
-		return this.getClass().hashCode();
+		return name.hashCode();		
 	}
 	
 	@Override
 	public boolean equals(Object destHost) {
-		return this.getName().equals(((DestinationHost) destHost).getName());
+		return this.getName().equals(((DestinationHost) destHost).getName());			
 	}
 	
+	/**
+	 * Ascending order using the name as comparator
+	 */
 	public static Comparator<DestinationHost> MongoModelComparator = new Comparator<DestinationHost>() {
 
 		public int compare(DestinationHost model1, DestinationHost model2) {
-
 			String name1 = model1.getName().toUpperCase();
 			String name2 = model2.getName().toUpperCase();
 			// ascending order

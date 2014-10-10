@@ -14,7 +14,7 @@ public class LogEntryDate extends AbstractMongoModel {
 	private Long timeStamp;
 
 	public LogEntryDate() {
-		
+		this.timeStamp = 0L;
 	}
 	
 	public LogEntryDate(Long timeStamp, int value) {
@@ -42,17 +42,17 @@ public class LogEntryDate extends AbstractMongoModel {
 	
 	@Override
 	public int hashCode() {
-		if (timeStamp != null) {
-			return timeStamp.hashCode();
-		}
-		return this.getClass().hashCode();
+		return timeStamp.hashCode();
 	}
 	
 	@Override
 	public boolean equals(Object logEntry) {
 		return this.getTimeStamp().equals(((LogEntryDate) logEntry).getTimeStamp());
 	}
-	
+
+	/**
+	 * Ascending order using the timeStamp as comparator
+	 */
 	public static Comparator<LogEntryDate> MongoModelComparator = new Comparator<LogEntryDate>() {
 
 		public int compare(LogEntryDate model1, LogEntryDate model2) {

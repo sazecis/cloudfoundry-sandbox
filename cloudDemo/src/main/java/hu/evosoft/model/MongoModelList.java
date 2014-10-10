@@ -1,15 +1,14 @@
 package hu.evosoft.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MongoModelList {
 
-	private static Set<IMongoModel> myModelSet = new HashSet<>();
+	private static List<IMongoModel> myModelSet = new ArrayList<>();
 		
 	static
 	{
-		//myModelList.add(new Data());
 		myModelSet.add(new DestinationHost());
 		myModelSet.add(new LogEntryDate());
 	}
@@ -17,7 +16,7 @@ public class MongoModelList {
 	private MongoModelList() {		
 	}
 	
-	public static Set<IMongoModel> getModelSet() {
+	public static List<IMongoModel> getModelSet() {
 		return myModelSet;
 	}
 	

@@ -19,7 +19,7 @@ public class LogEntryDateTest {
 	public void testDefaultConstructor() {
 		LogEntryDate led = new LogEntryDate();
 		assertEquals(UUID.fromString(led.getId()).toString(), led.getId());
-		assertEquals(null, led.getTimeStamp());
+		assertEquals(Long.valueOf(0L), led.getTimeStamp());
 		assertEquals(1, led.getValue());
 	}
 
@@ -36,9 +36,9 @@ public class LogEntryDateTest {
 	@Test
 	public void testEquals() {
 		LogEntryDate led = new LogEntryDate(myTimeStamp, myValue);
-		assertFalse("led.equals(new LogEntryDate()) returned false", 
+		assertFalse("led.equals(new LogEntryDate()) returned true but was expected false", 
 				led.equals(new LogEntryDate()));
-		assertTrue("led.equals(new LogEntryDate()) returned true", 
+		assertTrue("led.equals(new LogEntryDate(myTimeStamp, myValue)) returned false but was expected true", 
 				led.equals(new LogEntryDate(myTimeStamp, myValue)));
 	}
 

@@ -17,7 +17,7 @@ public class DestinationHostTest {
 	public void testDefaultConstructor() {
 		DestinationHost ds = new DestinationHost();
 		assertEquals(UUID.fromString(ds.getId()).toString(), ds.getId());
-		assertEquals(null, ds.getName());
+		assertEquals("", ds.getName());
 		assertEquals(1, ds.getValue());
 	}
 

@@ -35,6 +35,10 @@ public abstract class AbstractMongoModel implements Serializable,
 		this.value = value;
 	}
 
+	/**
+	 * By default the list will be sorted decreasingly.
+	 * The value is used for comparison.
+	 */
 	public int compareTo(AbstractMongoModel model) {
 		int compareValue = ((AbstractMongoModel) model).getValue();
 		return compareValue - this.value;
