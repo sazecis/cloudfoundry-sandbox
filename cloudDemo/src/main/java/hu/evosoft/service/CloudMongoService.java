@@ -19,6 +19,14 @@ public class CloudMongoService {
 	@Autowired
 	private MongoTemplate mongoTemplate;
 
+	public CloudMongoService() {
+		
+	}
+
+	public CloudMongoService(MongoTemplate template) {
+		this.mongoTemplate = template;
+	}
+
 	public void addDocument(IMongoModel document) {
 		MyLogger.appendLog(CloudMongoService.class.getSimpleName(),
 				document.toString(), document.getClass().getSimpleName(),
@@ -63,19 +71,18 @@ public class CloudMongoService {
 		}
 	}
 
-	public <T> void mapReduce(Class<T> type, String mapper) {
+	public <T extends IMongoModel> void mapReduce(Class<T> type, String mapper) {
 		MyLogger.appendLog("Collection exists?", type.getSimpleName(), Boolean.toString(mongoTemplate.collectionExists(type)));		
-		MapReduceResults<T> results = mongoTemplate.mapReduce(
+		MapReduceResults<T> mapReduceResults = mongoTemplate.mapReduce(
 				type.getSimpleName(), mapper,
 				"classpath:js/reduce.js", type);
 		mongoTemplate.dropCollection(type.getSimpleName());
 		MyLogger.appendLog("Collection exists after drop too?", type.getSimpleName(), 
-				Boolean.toString(mongoTemplate.collectionExists(type)));		
-		for (T result : results) {
-			IMongoModel aggregated = (IMongoModel) result;
-			aggregated.moveIdToContent();
-			MyLogger.appendLog("mongoTemplate.insert", aggregated.toString(), type.getSimpleName());
-			mongoTemplate.insert(aggregated, aggregated.collectionName());
+				Boolean.toString(mongoTemplate.collectionExists(type)));	
+		for (IMongoModel result : mapReduceResults) {
+			result.moveIdToContent();
+			MyLogger.appendLog("mongoTemplate.insert", result.toString(), type.getSimpleName());
+			mongoTemplate.insert(result, result.collectionName());
 		}
 	}
 
