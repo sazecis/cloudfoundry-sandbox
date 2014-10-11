@@ -43,6 +43,11 @@ public class ReadNetStatsController {
 	@Autowired
 	private PerformanceCounterService performanceCounterpervice;
 
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String home(ModelMap model) {
+		return "index";
+	}
+	
 	@RequestMapping(value = "/read_netstat", method = RequestMethod.GET)
 	public String readNetStat(ModelMap model) {
 		if (myContent != null) {
