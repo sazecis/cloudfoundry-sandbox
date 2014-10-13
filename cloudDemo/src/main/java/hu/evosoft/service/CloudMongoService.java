@@ -81,7 +81,6 @@ public class CloudMongoService {
 				Boolean.toString(mongoTemplate.collectionExists(type)));	
 		for (IMongoModel result : mapReduceResults) {
 			result.moveIdToContent();
-			MyLogger.appendLog("mongoTemplate.insert", result.toString(), type.getSimpleName());
 			mongoTemplate.insert(result, result.collectionName());
 		}
 	}

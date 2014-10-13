@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 import hu.evosoft.model.LogEntryDate;
 
+import java.sql.Timestamp;
 import java.util.UUID;
 
 import org.junit.Test;
@@ -88,9 +89,10 @@ public class LogEntryDateTest {
 
 	@Test
 	public void testGetTimeStampAsString() {
-		/*long timeStamp = System.currentTimeMillis();
-		LogEntryDate led = new LogEntryDate(myTimeStamp, myValue);*/
-		// TODO
+		long timeStamp = System.currentTimeMillis();
+		LogEntryDate led = new LogEntryDate(timeStamp, myValue);
+		Timestamp timeStampAsString = new Timestamp(timeStamp);
+		assertEquals(timeStampAsString.toString(), led.getTimeStampAsString());
 	}
 
 }

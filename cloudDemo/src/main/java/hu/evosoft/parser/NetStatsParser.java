@@ -18,6 +18,7 @@ public class NetStatsParser {
 	private static final short TIMESTAMP_INDEX = 0;
 	private static final short DEST_HOST_INDEX = 4;
 	private static final long TEN_MINUTES_IN_MILIS = 600000;
+	private static final String CURRENT_YEAR = "2014-01-01 00:00:00.0";
 	private static final String SPLITTER = ";";
 	
 	
@@ -88,11 +89,22 @@ public class NetStatsParser {
 		String date = null;
 		try {
 			date = line[TIMESTAMP_INDEX];
-			return convertToTenMinutesInterval(Timestamp.valueOf(date)).getTime();
+			long timeStamp = convertToTenMinutesInterval(Timestamp.valueOf(date)).getTime();
+			if (isOldDate(timeStamp)) {
+				throw new InvalidNetStatLineException();
+			}
+			return timeStamp;
 		}
 		catch (Exception x) {
 			throw new InvalidNetStatLineException(String.format("Cannot get Timestamp from line \"%s\"", line.toString()));
 		}
+	}
+	
+	public static boolean isOldDate(long timeStamp) {
+		if (timeStamp < Timestamp.valueOf(CURRENT_YEAR).getTime()) {
+			return true;
+		}		
+		return false;
 	}
 	
 	private static Timestamp convertToTenMinutesInterval(Timestamp timestamp) {

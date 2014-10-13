@@ -5,22 +5,21 @@
 </head>
 <body>
 	<h2>Process Net Statistics files</h2>
-	<br />
-	<a href="/">home</a>
+	<a href="/">Home</a>
 	<br /><br />
 	<b>Upload and process the selected file (create statistics)</b>
-	<br />
 	<form action="read_netstat/live_process" method="post"
 		enctype="multipart/form-data">
-		<input type="file" name="logFile" /> <br /> <input type="submit"
-			value="Upload & Process" />
+		<input type="file" name="logFile" /> 
+		<input type="submit" value="Upload & Process" />
 	</form>
+	<br /><br />
 	<b>Upload and store as a raw file on the server</b>
 	<br />
 	<form action="read_netstat/upload" method="post"
 		enctype="multipart/form-data">
-		<input type="file" name="logFile" /> <br /> <input type="submit"
-			value="Upload" />
+		<input type="file" name="logFile" />  
+		<input type="submit" value="Upload" />
 	</form>
 	<br /><br />
 	<b>Raw files on the server</b>

@@ -19,7 +19,7 @@
 					<a href="read_netstat">Load and process data ...</a>
 				</td>
 				<td>
-					<a href="TODO">Statistics - TODO LINK</a>
+					<a href="gwt-eo.cfapps.io">Statistics</a>
 				</td>
 			</tr>
 		</table>

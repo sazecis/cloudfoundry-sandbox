@@ -31,26 +31,26 @@ public class PerformanceCounterService {
 	}
 	
 	public long getGlobalTimeSpentFor(CounterCategory category) {
-		long timeStart = -1; 
-		long timeEnd = Long.MAX_VALUE;
+		long timeStart = Long.MAX_VALUE; 
+		long timeEnd = -1;
 		for (CounterEntity entity : mongoService.listPerformanceCounters()) {
 			MyLogger.appendLog("getGlobalTimeSpentFor counter: {0}", entity);
 			if (entity.getCategory().equals(category)) {
 				switch (entity.getCounterType().name()) {
 					case "START" : {
-						timeStart = entity.getValue() > timeStart ? 
+						timeStart = entity.getValue() < timeStart ? 
 								entity.getValue() : timeStart; 
 						break;
 					}
 					case "END" : {
-						timeEnd = entity.getValue() < timeEnd ?
+						timeEnd = entity.getValue() > timeEnd ?
 								entity.getValue() : timeEnd; 
 						break;
 					}
 				}
 			}
 		}
-		if (timeStart != -1 && timeEnd != Long.MAX_VALUE) {
+		if (timeStart != Long.MAX_VALUE && timeEnd != -1) {
 			return timeEnd - timeStart;
 		}
 		return -1;

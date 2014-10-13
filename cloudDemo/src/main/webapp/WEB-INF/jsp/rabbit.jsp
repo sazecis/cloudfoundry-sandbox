@@ -5,10 +5,10 @@
 </head>
 <body>
 	<h2>RabitMQ in CloudFoundary</h2>
-
+	<a href="/">Home</a>
+	<br/><br/>
 	<input type="button" value="Purge" onclick="window.location='rabbit/purge'" />
+	<br/><br/>
 	<input type="checkbox" name="DevNull" value="DevNull" ${state} onclick="window.location='rabbit/nulldev'" /> DevNull
-	<br />
-	<a href="/">home</a>
 </body>
 </html>

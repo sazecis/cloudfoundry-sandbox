@@ -3,8 +3,11 @@ package hu.evosoft.service;
 import hu.evosoft.logger.CounterCategory;
 import hu.evosoft.logger.CounterType;
 import hu.evosoft.logger.MyLogger;
+import hu.evosoft.model.DestinationHost;
 import hu.evosoft.model.IMongoModel;
+import hu.evosoft.model.LogEntryDate;
 import hu.evosoft.model.MongoModelList;
+import hu.evosoft.parser.NetStatsParser;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,7 +31,14 @@ public class RedisMongoTransferrer {
     			this.getClass().getSimpleName(), 
     			System.currentTimeMillis());
     	for (IMongoModel model : redisService.popAllMongoCompatibleValues()) {
-    		MyLogger.appendLog("transfer ", RedisMongoTransferrer.class.getSimpleName(), model.toString());
+    		if (model instanceof DestinationHost && 
+    				NetStatsParser.isValidDateFormat(((DestinationHost) model).getName())) {
+    			continue;
+    		}
+    		if (model instanceof LogEntryDate && 
+    				NetStatsParser.isOldDate(((LogEntryDate) model).getTimeStamp().longValue())) {
+    			continue;
+    		}
     		mongoService.addDocument(model);
     	}
     	performanceCounterService.addNewCounterEntry(
@@ -42,7 +52,6 @@ public class RedisMongoTransferrer {
 				System.currentTimeMillis());
     	for (IMongoModel model : MongoModelList.getModelSet())
     	{
-    		MyLogger.appendLog("transferAll ", model.getClass().getSimpleName());
     		mongoService.mapReduce(model.getClass(), model.mapper());
     	}
     	performanceCounterService.addNewCounterEntry(

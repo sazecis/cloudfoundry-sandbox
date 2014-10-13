@@ -135,7 +135,8 @@ public class ReadNetStatsController {
 		int counter = 1;
 		String line = null;
 
-		performanceCounterpervice.clearCounters();
+		// TODO add a checkbox to the site which allows to turn the auto counter clear on and off
+		//performanceCounterpervice.clearCounters();
 		rabbitService.sendBeginSignal();	
 		performanceCounterpervice.addNewCounterEntry(
 				CounterCategory.RABBIT_SEND, CounterType.START, 
