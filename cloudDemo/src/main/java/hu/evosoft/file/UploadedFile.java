@@ -2,17 +2,33 @@ package hu.evosoft.file;
 
 import java.text.MessageFormat;
 
+/**
+ * 
+ * Data transfer object for files which are uploaded to the ReadNetStatController.
+ * 
+ * @author Csaba.Szegedi
+ *
+ */
 public class UploadedFile {
 
 	private String size = "0";
 	private String name = "";
 
+	/**
+	 * Default ctr. 
+	 */
 	public UploadedFile() {
 		
 	}
-	
-	public UploadedFile(String name, String size) {
-		this.name = name;
+
+	/**
+	 * Constructor signed with file name and size of the file.  
+	 * 
+	 * @param fileName
+	 * @param size
+	 */
+	public UploadedFile(String fileName, String size) {
+		this.name = fileName;
 		this.size = size;
 	}
 

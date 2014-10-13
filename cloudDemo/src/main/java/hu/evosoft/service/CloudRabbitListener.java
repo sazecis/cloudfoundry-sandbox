@@ -12,6 +12,12 @@ import hu.evosoft.rabbit.SignalType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+/**
+ * Used as a listener for RabbitMQ queues.
+ * TODO
+ * @author Csaba.Szegedi
+ *
+ */
 public class CloudRabbitListener {
 
 	private static boolean isDevNullSet = false;	
@@ -46,7 +52,7 @@ public class CloudRabbitListener {
 					Long.toString(NetStatsParser.getTimeStamp(parts)));
 		}
 		catch (InvalidNetStatLineException x) {
-			MyLogger.appendLog(x.getMessage(), x.getStackTrace());
+			MyLogger.appendLog(x.getMessage());
 		}
 	}
 	

@@ -10,6 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Handles the calls from the controller to the RabbitMQ.
+ * TODO
+ * @author Csaba.Szegedi
+ *
+ */
 @Repository
 public class CloudRabbitService {
 

@@ -29,6 +29,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
+/**
+ * 
+ * Spring Controller used to handle the requests from the read_netstat.jsp
+ * 
+ * @author Csaba.Szegedi
+ *
+ */
 @Controller
 public class ReadNetStatsController {
 
@@ -43,11 +50,23 @@ public class ReadNetStatsController {
 	@Autowired
 	private PerformanceCounterService performanceCounterpervice;
 
+	/**
+	 * Handles the root URL.
+	 * 
+	 * @param model model contains information for the handling View
+	 * @return returns the location where the dispatcher will navigate
+	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(ModelMap model) {
 		return "index";
 	}
 	
+	/**
+	 * Handles the default location of the site where the files are uploaded.
+	 * 
+	 * @param model model contains information for the handling View
+	 * @return returns the location where the dispatcher will navigate
+	 */
 	@RequestMapping(value = "/read_netstat", method = RequestMethod.GET)
 	public String readNetStat(ModelMap model) {
 		if (myContent != null) {
@@ -58,7 +77,7 @@ public class ReadNetStatsController {
 			Files.walk(Paths.get(UPLOAD_LOCATION)).forEach(
 					filePath -> {
 						if (Files.isRegularFile(filePath)) {
-							myFileSet.add(new UploadedFile(filePath.toString(),
+							myFileSet.add(new UploadedFile(filePath.getFileName().toString(),
 									Long.toString(filePath.toFile().length())));
 						}
 					});
@@ -69,6 +88,13 @@ public class ReadNetStatsController {
 		return "read_netstat";
 	}
 
+	/**
+	 * Processes (sends them to RabbitMq) the files which are uploaded to the temporary location.
+	 * 
+	 * @param uploadedFile the file which will be processed
+	 * @param model model contains information for the handling View
+	 * @return returns the location where the dispatcher will navigate
+	 */
 	@RequestMapping(value = "/read_netstat/process_selected", method = RequestMethod.GET)
 	public View processSelectedFile(@ModelAttribute UploadedFile uploadedFile,
 			ModelMap model) {
@@ -81,6 +107,13 @@ public class ReadNetStatsController {
 		return new RedirectView("/read_netstat");
 	}
 
+	/**
+	 * Uploads the file to a temporary location on the server.
+	 * 
+	 * @param logFile the file which will be processed
+	 * @param model model contains information for the handling View
+	 * @return returns the location where the dispatcher will navigate
+	 */
 	@RequestMapping(value = "/read_netstat/upload", method = RequestMethod.POST)
 	public View uploadContent(@RequestParam MultipartFile logFile,
 			ModelMap model) {
@@ -115,6 +148,13 @@ public class ReadNetStatsController {
 		return new RedirectView("/read_netstat");
 	}
 
+	/**
+	 * Uploads a file from the local file system and send it right away to the RabbitMq.
+	 * 
+	 * @param logFile the file which will be processed
+	 * @param model model contains information for the handling View
+	 * @return returns the location where the dispatcher will navigate
+	 */
 	@RequestMapping(value = "/read_netstat/live_process", method = RequestMethod.POST)
 	public View readLogContent(@RequestParam MultipartFile logFile,
 			ModelMap model) {
@@ -131,6 +171,12 @@ public class ReadNetStatsController {
 		return new RedirectView("/read_netstat");
 	}
 
+	/**
+	 * Send content of the files to the RabbitMq.
+	 * 
+	 * @param reader BufferedReader reading the content of the file
+	 * @throws IOException in case something goes wrong with the reading
+	 */
 	private void readAndProcessFile(BufferedReader reader) throws IOException {
 		int counter = 1;
 		String line = null;
@@ -153,11 +199,6 @@ public class ReadNetStatsController {
 				this.getClass().getSimpleName(), 
 				System.currentTimeMillis());
 		rabbitService.sendEndSignal();		
-	}
-
-	@RequestMapping(value = "/stats", method = RequestMethod.GET)
-	public String gwtStatistics(ModelMap model) {
-		return "stats";
 	}
 
 }

@@ -4,6 +4,14 @@ import java.sql.Timestamp;
 import java.util.Comparator;
 import java.util.UUID;
 
+/**
+ * 
+ * MongoModel to handle the statistical entries according to their creation time.
+ * Contains the timestamp and the count of the entries from that period.
+ * 
+ * @author Csaba.Szegedi
+ *
+ */
 public class LogEntryDate extends AbstractMongoModel {
 	
 	/**
@@ -13,23 +21,45 @@ public class LogEntryDate extends AbstractMongoModel {
 	
 	private Long timeStamp;
 
+	/**
+	 * Default ctr. generating default values.
+	 */
 	public LogEntryDate() {
 		this.timeStamp = 0L;
 	}
 	
+	/**
+	 * Contsructor with a timestamp and value 
+	 * 
+	 * @param timeStamp
+	 * @param value
+	 */
 	public LogEntryDate(Long timeStamp, int value) {
 		this.timeStamp = timeStamp;
 		setValue(value);
 	}
 	
+	/**
+	 * Timestamp as milliseconds
+	 * @return
+	 */
 	public Long getTimeStamp() {
 		return timeStamp;
 	}
 		
+	/**
+	 * Transforms the miliseconds to a readable form: e.g. "2014-10-13 18:43:25.125"
+	 * 
+	 * @return the formated timestamp
+	 */
 	public String getTimeStampAsString() {
 		return new Timestamp(getTimeStamp()).toString();
 	}
 	
+	/**
+	 * Timestamp as milliseconds
+	 * @param timeStamp
+	 */
 	public void setTimeStamp(Long timeStamp) {
 		this.timeStamp = timeStamp;
 	}
@@ -64,12 +94,21 @@ public class LogEntryDate extends AbstractMongoModel {
 
 	};
 
+	/**
+	 * After the MapReduce in the MongoDb the id will be filled with the content so to get back to the original state
+	 * a new ID will be generated and the value from the ID will be moved back to the content.
+	 */
 	@Override
 	public void moveIdToContent() {
 		this.timeStamp = Long.parseLong(getId());
 		setId(UUID.randomUUID().toString());		
 	}
 	
+	/**
+	 * The location of the mapper java script function which will be used at Mapping in MapReduce phase.
+	 * 
+	 * @return the location of the javaScrip file.
+	 */
 	@Override
 	public String mapper() {
 		return "classpath:js/mapLogEntryDate.js";

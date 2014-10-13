@@ -7,6 +7,12 @@ import java.util.UUID;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+/**
+ * Document to hold information about the Performance form the system.
+ * 
+ * @author Csaba.Szegedi
+ *
+ */
 @Document
 public class CounterEntity implements Serializable{
 	

@@ -13,6 +13,12 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.mapreduce.MapReduceResults;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Handles the calls from the controller to the MongoDB.
+ * TODO
+ * @author Csaba.Szegedi
+ *
+ */
 @Repository
 public class CloudMongoService {
 

@@ -19,6 +19,12 @@ import org.springframework.data.redis.core.SetOperations;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Handles the calls from the controller to the Redis.
+ * TODO
+ * @author Csaba.Szegedi
+ *
+ */
 @Repository
 public class CloudRedisService {
 

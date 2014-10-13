@@ -6,6 +6,12 @@ import java.util.UUID;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+/**
+ * Abstract class containing the main implementations of IMongoModel interface. All models which will be harvested have to extend this class. 
+ * 
+ * @author Csaba.Szegedi
+ *
+ */
 @Document
 public abstract class AbstractMongoModel implements Serializable,
 		Comparable<AbstractMongoModel>, IMongoModel {
@@ -44,6 +50,9 @@ public abstract class AbstractMongoModel implements Serializable,
 		return compareValue - this.value;
 	}
 	
+	/**
+	 * The name of the collection in which the document is stored in the MongoDb
+	 */
 	@Override
 	public String collectionName() {
 		return this.getClass().getSimpleName();

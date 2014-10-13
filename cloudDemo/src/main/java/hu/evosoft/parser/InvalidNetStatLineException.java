@@ -1,5 +1,11 @@
 package hu.evosoft.parser;
 
+/**
+ * Used in case some exception occurs during the parsing of the raw statistics file.
+ * 
+ * @author Csaba.Szegedi
+ *
+ */
 public class InvalidNetStatLineException extends Exception {
 
 	/**

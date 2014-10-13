@@ -3,6 +3,14 @@ package hu.evosoft.model;
 import java.util.Comparator;
 import java.util.UUID;
 
+/**
+ * 
+ * MongoModel to handle the statistical entries according to their destination host (domain).
+ * Contains the destination host name and the count of the entries from that domain.
+ * 
+ * @author Csaba.Szegedi
+ *
+ */
 public class DestinationHost extends AbstractMongoModel {
 	
 	/**
@@ -12,10 +20,18 @@ public class DestinationHost extends AbstractMongoModel {
 	
 	private String name;
 
+	/**
+	 * Default ctr.
+	 */
 	public DestinationHost() {
 		this.name = "";
 	}
 	
+	/**
+	 * Constructor with destination host name the the count of accesses
+	 * @param name
+	 * @param value
+	 */
 	public DestinationHost(String name, int value) {
 		this.name = name;
 		setValue(value);
@@ -58,12 +74,21 @@ public class DestinationHost extends AbstractMongoModel {
 
 	};
 
+	/**
+	 * After the MapReduce in the MongoDb the id will be filled with the content so to get back to the original state
+	 * a new ID will be generated and the value from the ID will be moved back to the content.
+	 */
 	@Override
 	public void moveIdToContent() {
 		this.name = getId();
 		setId(UUID.randomUUID().toString());
 	}
 
+	/**
+	 * The location of the mapper java script function which will be used at Mapping in MapReduce phase.
+	 * 
+	 * @return the location of the javaScrip file.
+	 */
 	@Override
 	public String mapper() {
 		return "classpath:js/mapDestinationHost.js";

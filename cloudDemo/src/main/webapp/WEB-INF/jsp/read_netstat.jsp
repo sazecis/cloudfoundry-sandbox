@@ -33,7 +33,7 @@
 		<c:forEach var="uploadedFile" items="${fileList}">
 			<tr>
 				<td>${uploadedFile.name}</td>
-				<td>${uploadedFile.size}</td>
+				<td>${uploadedFile.size/(1024*1024)} MB</td>
 				<td>
 					<input type="button" value="Process it"
 						onclick="window.location='read_netstat/process_selected?name=${uploadedFile.name}'" /> 
