@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 /**
- * TODO
+ * 
+ * Transfers data from Redis to MongoDB.
+ * 
  * @author Csaba.Szegedi
  *
  */
@@ -30,7 +32,16 @@ public class RedisMongoTransferrer {
 	@Autowired
 	private PerformanceCounterService performanceCounterService;
 
+	/**
+	 * Transfer all available IMongoModel compatible data from Redis to MongoDB.
+	 * The sequence is the following:
+	 *  - read all key value pairs from redis
+	 *  - combine them
+	 *  - add them to MongoDB
+	 *  - execute a MapReduce on the MongoDB to combine new values with already stored values
+	 */
     public void transferAll() {
+    	// measure the time spent to read data from Redis, combining it and adding it to MongoDB
     	performanceCounterService.addNewCounterEntry(
     			CounterCategory.MONGO_ADD, CounterType.START, 
     			this.getClass().getSimpleName(), 
@@ -51,6 +62,7 @@ public class RedisMongoTransferrer {
     			this.getClass().getSimpleName(), 
     			System.currentTimeMillis());
     	MyLogger.appendLog("Size of MongoModelList", Integer.toString(MongoModelList.getModelSet().size()));
+    	// Measure the MapReduce in MongDB
     	performanceCounterService.addNewCounterEntry(
     			CounterCategory.MONGO_MR, CounterType.START, 
     			this.getClass().getSimpleName(), 

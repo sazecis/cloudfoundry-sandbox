@@ -21,7 +21,7 @@ import org.springframework.stereotype.Repository;
 
 /**
  * Handles the calls from the controller to the Redis.
- * TODO
+ * 
  * @author Csaba.Szegedi
  *
  */
@@ -31,12 +31,13 @@ public class CloudRedisService {
     @Autowired 
     private RedisTemplate<String, String> redisTemplate;
     
+    // this is a special key which will be used as a pointer to the real keys 
     private static final String MY_KEYS = "MY_KEYS";
     
     private static final String INC_STEP = "1";  
     
     // inject the template as ListOperations
-    // can also inject as Value, Set, ZSet, and HashOperations
+    // can also inject as Value, Set
     @Resource(name="redisTemplate")
     private ListOperations<String, String> listOps;
     @Resource(name="redisTemplate")
@@ -44,13 +45,26 @@ public class CloudRedisService {
     @Resource(name="redisTemplate")
     private ValueOperations<String, String> valOps;
     
-    public void addNetStatInfo(String... keys) {    	
+    /**
+     * Add the given keys to the Redis. If already exists then will just register that the
+     * given key was received one more time. This is the Mapping phase.
+     * 
+     * @param keys the keys to be added to the Redis
+     */
+    public void addNetStatInfo(String... keys) {    
+    	// add the key to MY_KEYS set
 		setOps.add(MY_KEYS, keys);
     	for (String key : keys) {
+    		// <key, 1, 1, 1, ... ,1>
     		listOps.rightPush(key, INC_STEP);
     	}
     }
 
+    /**
+     * Get the list of the stored key value pairs.
+     * 
+     * @return String list "key 1 1 1 1 ..."
+     */
     public List<String> listNetStatInfo() {
     	MyLogger.appendLog("{0}: {1}", MY_KEYS, setOps.members(MY_KEYS));
     	List<String> list = new ArrayList<String>();
@@ -60,6 +74,12 @@ public class CloudRedisService {
     	return list;
     }
     
+    /**
+     * Pop all values from Redis which will be transfered to MongoDB.
+     * Combiner phase.
+     * 
+     * @return the combined list of IMongoModels
+     */
     public List<IMongoModel> popAllMongoCompatibleValues() {
     	List<IMongoModel> list = new ArrayList<IMongoModel>();
     	for (String key : getKeys()) {
@@ -85,6 +105,9 @@ public class CloudRedisService {
     	setOps.remove(MY_KEYS, key);
     }
     
+    /**
+     * Clear the Redis.
+     */
     public void clearData() {
     	for (String key : getKeys()) {
     		redisTemplate.delete(key);

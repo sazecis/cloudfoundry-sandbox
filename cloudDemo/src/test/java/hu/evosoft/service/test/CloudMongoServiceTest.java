@@ -133,13 +133,6 @@ public class CloudMongoServiceTest {
 		assertEquals(list.size(), service.listPerformanceCounters().size());
 	}
 
-	@Test
-	public void testUpdateDocument() {
-		IMongoModel ds = new DestinationHost();
-		service.updateDocument(ds);
-		verify(mockMongoTemplate).insert(ds, ds.collectionName());
-	}
-
 	@SuppressWarnings("unchecked")
 	@Test
 	public <T> void testMapReduce() {

@@ -14,12 +14,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * Used as a listener for RabbitMQ queues.
- * TODO
+ * 
  * @author Csaba.Szegedi
  *
  */
 public class CloudRabbitListener {
 
+	// if this value is true then the received messages won't be sent further to the Redis but just to DevNull. 
 	private static boolean isDevNullSet = false;	
 	
 	@Autowired
@@ -34,31 +35,43 @@ public class CloudRabbitListener {
 	@Autowired
 	private RedisMongoTransferrer redisMongoTransferrer;
 
+	/**
+	 * Listens for the messages.
+	 * 
+	 * @param message the message received from the queue.
+	 */
 	public void listen(Object message) {
+		// if it is a string then process the message as an IMongoModel
 		if (message instanceof String) {
 			receiveStrings((String) message);
-		} else if (message instanceof Signal) {
+		}
+		// if the message type is a Signal then handle accordingly
+		else if (message instanceof Signal) {
 			receiveSignal((Signal) message);
 		}
 	}
 
-	public void receiveStrings(String message) {
+	
+	private void receiveStrings(String message) {
 		if (isDevNullSet) {
 			return;
 		}
 		try {
+			// Split the message and add the needed information to the Redis
 			String[] parts = NetStatsParser.splitLine(message);
 			redisService.addNetStatInfo(NetStatsParser.getDestinationHost(parts), 
 					Long.toString(NetStatsParser.getTimeStamp(parts)));
 		}
 		catch (InvalidNetStatLineException x) {
+			// In case the received message has an incorrect format then log this
 			MyLogger.appendLog(x.getMessage());
 		}
 	}
 	
-	public void receiveSignal(Signal signal) {
+	private void receiveSignal(Signal signal) {
 		MyLogger.appendLog("Signal listener: ", signal.toString());
 		switch (signal.getType().name()) {
+			// start to measure the queue receiver side
 			case "BEGIN" : {
 				performanceCounterService.addNewCounterEntry(
 						CounterCategory.RABBIT_RECEIVE, CounterType.START, 
@@ -66,6 +79,7 @@ public class CloudRabbitListener {
 						System.currentTimeMillis());
 				break;
 			}
+			// stop measuring the queue receiver side
 			case "END" : {
 				performanceCounterService.addNewCounterEntry(
 						CounterCategory.RABBIT_RECEIVE, CounterType.END, 
@@ -86,11 +100,21 @@ public class CloudRabbitListener {
 		}
 	}
 
+	/**
+	 * Turn on and off the DevNull
+	 * 
+	 * @return it returns a string which can be used in JSP for checkbox states, e.g. "checked"
+	 */
 	public static String changeDevNullState() {
 		isDevNullSet = !isDevNullSet;
 		return isDevNullSet ? "checked" : "";
 	}
 	
+	/**
+	 * Listen for the performance counter messages.
+	 * 
+	 * @param entity the received measurement
+	 */
 	public void listenCounter(CounterEntity entity) {
 		MyLogger.appendLog("listenCounter {0}", entity);
 		mongoService.addCounter(entity);
