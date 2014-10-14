@@ -61,6 +61,13 @@ public class CloudMongoService {
 		mongoTemplate.insert(document, document.collectionName());
 	}
 
+	public void addCollection(List<IMongoModel> list, String collectionName) {
+		if (!mongoTemplate.collectionExists(collectionName)) {
+			mongoTemplate.createCollection(collectionName);
+		}
+		mongoTemplate.insert(list, collectionName);
+	}
+	
 	/**
 	 * Insert a new CounterEntity (used for performance measurements) into the MongoDB.
 	 * 

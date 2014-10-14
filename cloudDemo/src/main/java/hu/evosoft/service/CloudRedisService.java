@@ -46,6 +46,31 @@ public class CloudRedisService {
     private ValueOperations<String, String> valOps;
     
     /**
+     * Default ctr.
+     */
+    public CloudRedisService() {
+    	
+    }
+    
+    /**
+     * Constructor initialized with a redis template and with needed operations. Helps unit testing.
+     * 
+     * @param redisTemplate
+     * @param listOps
+     * @param setOps
+     * @param valOps
+     */
+    public CloudRedisService(RedisTemplate<String, String> redisTemplate, 
+    		ListOperations<String, String> listOps, 
+    		SetOperations<String, String> setOps,
+    		ValueOperations<String, String> valOps) {
+    	this.redisTemplate = redisTemplate;
+    	this.listOps = listOps;
+    	this.setOps = setOps;
+    	this.valOps = valOps;
+    }
+    
+    /**
      * Add the given keys to the Redis. If already exists then will just register that the
      * given key was received one more time. This is the Mapping phase.
      * 

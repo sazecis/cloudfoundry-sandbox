@@ -9,6 +9,9 @@ import hu.evosoft.model.LogEntryDate;
 import hu.evosoft.model.MongoModelList;
 import hu.evosoft.parser.NetStatsParser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -76,5 +79,24 @@ public class RedisMongoTransferrer {
     			this.getClass().getSimpleName(), 
 				System.currentTimeMillis());
     }
-    
+
+    public void transferAllFromLocalMapper(List<String> mapped) {
+    	List<IMongoModel> dsList = new ArrayList<>();
+    	List<IMongoModel> ledList = new ArrayList<>();
+    	for (String key : mapped) {			
+			if (NetStatsParser.isDateInMilisecond(key)) {
+	    		ledList.add(new LogEntryDate(Long.parseLong(key), 1));    			    			
+			} 
+			else {
+	    		dsList.add(new DestinationHost(key, 1));    			
+			}
+		}
+    	mongoService.addCollection(dsList, DestinationHost.class.getSimpleName());
+    	mongoService.addCollection(ledList, DestinationHost.class.getSimpleName());
+    	for (IMongoModel model : MongoModelList.getModelSet())
+    	{
+    		mongoService.mapReduce(model.getClass(), model.mapper());
+    	}
+    }
+
 }

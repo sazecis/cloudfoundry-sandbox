@@ -73,7 +73,9 @@ public class CloudRabbitService {
 	 * Send a Signal to the default queue pointing out that the we reached the end of the file which was processed.  
 	 */
 	public void sendEndSignal() {
-        rabbitTemplate.convertAndSend(DEFAULT_QUEUE_NAME, new Signal(SignalType.END));		
+		for (int i = 0; i < 10; i++) {
+			rabbitTemplate.convertAndSend(DEFAULT_QUEUE_NAME, new Signal(SignalType.END));
+		}
 	}
 	
 	/**
