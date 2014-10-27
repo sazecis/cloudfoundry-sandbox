@@ -60,10 +60,10 @@ public class CloudRabbitListener {
 		try {
 			// Split the message and add the needed information to the Redis
 			String[] parts = NetStatsParser.splitLine(message);
-			CloudMapper.addItems(NetStatsParser.getDestinationHost(parts), 
-					Long.toString(NetStatsParser.getTimeStamp(parts)));
-			/*redisService.addNetStatInfo(NetStatsParser.getDestinationHost(parts), 
+			/*CloudMapper.addItems(NetStatsParser.getDestinationHost(parts), 
 					Long.toString(NetStatsParser.getTimeStamp(parts)));*/
+			redisService.addNetStatInfo(NetStatsParser.getDestinationHost(parts), 
+					Long.toString(NetStatsParser.getTimeStamp(parts)));
 		}
 		catch (InvalidNetStatLineException x) {
 			// In case the received message has an incorrect format then log this
@@ -94,8 +94,8 @@ public class CloudRabbitListener {
 		if (signal != null && !isDevNullSet &&  
 				(signal.getType().equals(SignalType.END) || signal.getType().equals(SignalType.CHUNK))) {
 			try {
-				//redisMongoTransferrer.transferAll();
-				redisMongoTransferrer.transferAllFromLocalMapper(CloudMapper.getList());
+				redisMongoTransferrer.transferAll();
+				//redisMongoTransferrer.transferAllFromLocalMapper(CloudMapper.getList());
 			} 
 			catch (Exception ex) {
 				MyLogger.appendLog("Transfer exception:", ex.toString());
